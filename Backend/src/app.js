@@ -11,7 +11,6 @@ import productoRoutes from './routes/productoRoutes.js';
 
 const app = express();
 dotenv.config();
-
 const corsOptions = {
     origin: 'https://20241062-ui.github.io', 
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT', 'OPTIONS'],
