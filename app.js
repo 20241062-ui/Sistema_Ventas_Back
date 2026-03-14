@@ -1,23 +1,23 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import db from './config/BD.js';
-import authRoutes from './routes/authRoutes.js';
-import publicRoutes from './routes/publicRoutes.js';
-import adminRoutes from './routes/adminRoutes.js';
-import ventaRoutes from './routes/ventaRoutes.js';
-import comprasRoutes from './routes/comprasRoutes.js';
-import productoRoutes from './routes/productoRoutes.js';
+import db from './src/config/BD.js';
+import authRoutes from './src/routes/authRoutes.js';
+import publicRoutes from './src/routes/publicRoutes.js';
+import adminRoutes from './src/routes/adminRoutes.js';
+import ventaRoutes from './src/routes/ventaRoutes.js';
+import comprasRoutes from './src/routes/comprasRoutes.js';
+import productoRoutes from './src/routes/productoRoutes.js';
 
 const app = express();
 dotenv.config();
+
 const corsOptions = {
     origin: 'https://20241062-ui.github.io', 
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 };
-
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); 
@@ -33,7 +33,6 @@ app.use('/api/productos', productoRoutes);
 
 app.get('/api/prueba-db', async (req, res) => {
     try {
-        
         const [rows] = await db.query('SELECT 1 + 1 AS resultado');
         res.json({ 
             estado: "Conexión Exitosa", 
