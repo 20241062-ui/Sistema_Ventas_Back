@@ -7,13 +7,10 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/app.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/app.js"
-    }
+    { "source": "/api/(.*)",
+    "destination": "/app.js" },
+    
+    { "source": "/(.*)",
+    "destination": "/app.js" }
   ]
 }
