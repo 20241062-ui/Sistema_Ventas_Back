@@ -29,20 +29,9 @@ export const obtenerDashboardProductos = async (req, res) => {
     }
 };
 
-// Nueva función para Detalle de Producto
-export const obtenerDetalleProducto = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const producto = await Producto.obtenerPorId(id);
-        if (!producto) return res.status(404).json({ mensaje: "Producto no encontrado" });
-        res.json(producto);
-    } catch (error) {
-        res.status(500).json({ mensaje: error.message });
-    }
-};
-
 export const agregarProducto = async (req, res) => {
     try {
+        // Usamos el método crear de tu modelo
         await Producto.crear(req.body);
         res.json({ status: 'success', message: 'Producto agregado correctamente' });
     } catch (error) {
@@ -52,19 +41,11 @@ export const agregarProducto = async (req, res) => {
 
 export const actualizarProducto = async (req, res) => {
     const { id } = req.params;
-    const { intid_Marca, intid_Categoria, vchNombre, vchDescripcion, floPrecioUnitario, intStock, floPrecioCompra } = req.body;
-    const { nombre, rol } = req.user; // Del Token
+    const usuario = { nombre: req.user.nombre, rol: req.user.rol }; // Extraído del token
 
     try {
-        // 1. Actualizar datos generales
-        await db.query(
-            `UPDATE tblproductos SET intid_Marca=?, intid_Categoria=?, vchNombre=?, vchDescripcion=?, intStock=?, floPrecioCompra=? WHERE vchNo_Serie=?`,
-            [intid_Marca, intid_Categoria, vchNombre, vchDescripcion, intStock, floPrecioCompra, id]
-        );
-
-        // 2. Llamar al procedimiento de precio (como hacías en PHP)
-        await db.query("CALL sp_actualizar_precio(?, ?, ?, ?)", [id, floPrecioUnitario, nombre, rol]);
-
+        // LLAMADA AL MODELO (No a db directamente)
+        await Producto.actualizar(id, req.body, usuario);
         res.json({ mensaje: "Producto actualizado correctamente" });
     } catch (error) {
         res.status(500).json({ mensaje: error.message });
@@ -74,19 +55,11 @@ export const actualizarProducto = async (req, res) => {
 export const cambiarEstadoProducto = async (req, res) => {
     const { id } = req.params; 
     const { estado } = req.body; 
-    const { nombre, rol } = req.user; 
+    const usuario = { nombre: req.user.nombre, rol: req.user.rol };
 
     try {
-        await db.query("SET @usuario_sistema = ?, @rol_usuario = ?", [nombre, rol]);
-
-        const [result] = await db.query(
-            "UPDATE tblproductos SET Estado = ? WHERE vchNo_Serie = ?",
-            [estado, id]
-        );
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ mensaje: "Producto no encontrado" });
-        }
+        // LLAMADA AL MODELO
+        await Producto.cambiarEstado(id, estado, usuario);
 
         res.json({ 
             status: "success", 
