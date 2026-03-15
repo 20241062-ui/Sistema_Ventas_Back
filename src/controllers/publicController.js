@@ -35,13 +35,13 @@ export const obtenerNosotros = async (req, res) => {
 export const obtenerSucursales = async (req, res) => {
     try {
         const [rows] = await db.query('SELECT * FROM tblsucursales');
-        
+
         // Procesamos los links de los mapas para que funcionen en iframes
         const sucursales = rows.map(s => ({
             ...s,
             vchlink_mapa: s.vchlink_mapa.replace('/viewer?', '/embed?')
         }));
-        
+
         res.json(sucursales);
     } catch (error) {
         console.error('Error al obtener sucursales:', error);
@@ -65,7 +65,7 @@ export const obtenerContactoInfo = async (req, res) => {
 
 export const enviarMensajeContacto = async (req, res) => {
     const { nombre, correo, mensaje } = req.body;
-    
+
     // Validación básica para evitar guardar campos vacíos
     if (!nombre || !correo || !mensaje) {
         return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios.' });
@@ -74,13 +74,32 @@ export const enviarMensajeContacto = async (req, res) => {
     try {
         // Asegúrate de que esta tabla exista en tu BD
         await db.query(
-            'INSERT INTO tblcontacto (vchNombre, vchCorreo, vchMensaje, dtFechaEnvio) VALUES (?, ?, ?, NOW())', 
+            'INSERT INTO tblcontacto (vchNombre, vchCorreo, vchMensaje, dtFechaEnvio) VALUES (?, ?, ?, NOW())',
             [nombre, correo, mensaje]
         );
-        
+
         res.json({ success: true, message: '¡Gracias! Tu mensaje ha sido enviado con éxito.' });
     } catch (error) {
         console.error('Error al guardar mensaje:', error);
         res.status(500).json({ success: false, message: 'Hubo un error al enviar tu mensaje.' });
+    }
+};
+// Obtener todas las marcas para los selects
+export const obtenerMarcas = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT intid_Marca, vchNombre FROM tblmarcas ORDER BY vchNombre ASC');
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al obtener marcas" });
+    }
+};
+
+// Obtener todas las categorías para los selects
+export const obtenerCategorias = async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT intid_Categoria, vchNombre FROM tblcategoria ORDER BY vchNombre ASC');
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al obtener categorías" });
     }
 };

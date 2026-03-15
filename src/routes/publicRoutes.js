@@ -5,7 +5,9 @@ import {
     obtenerNosotros, 
     obtenerSucursales, 
     obtenerContactoInfo, 
-    enviarMensajeContacto 
+    enviarMensajeContacto,
+    obtenerMarcas,
+    obtenerCategorias
 } from '../controllers/publicController.js';
 
 const router = express.Router();
@@ -16,5 +18,7 @@ router.get('/nosotros', obtenerNosotros);
 router.get('/sucursales', obtenerSucursales);
 router.get('/contacto-info', obtenerContactoInfo);
 router.post('/enviar-mensaje', enviarMensajeContacto);
+router.get('/marcas', obtenerMarcas);
+router.get('/categorias', obtenerCategorias);
 
 export default router;
