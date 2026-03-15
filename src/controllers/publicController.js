@@ -63,16 +63,24 @@ export const obtenerContactoInfo = async (req, res) => {
     }
 };
 
-// Recibir mensaje del formulario
 export const enviarMensajeContacto = async (req, res) => {
     const { nombre, correo, mensaje } = req.body;
+    
+    // Validación básica para evitar guardar campos vacíos
+    if (!nombre || !correo || !mensaje) {
+        return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios.' });
+    }
+
     try {
-        // Aquí podrías insertar en una tabla de mensajes si la tienes
-        // await db.query('INSERT INTO tblmensajes (nombre, correo, mensaje) VALUES (?, ?, ?)', [nombre, correo, mensaje]);
+        // Asegúrate de que esta tabla exista en tu BD
+        await db.query(
+            'INSERT INTO tblcontacto (vchNombre, vchCorreo, vchMensaje, dtFechaEnvio) VALUES (?, ?, ?, NOW())', 
+            [nombre, correo, mensaje]
+        );
         
-        console.log(`Mensaje recibido de ${nombre}: ${mensaje}`);
         res.json({ success: true, message: '¡Gracias! Tu mensaje ha sido enviado con éxito.' });
     } catch (error) {
+        console.error('Error al guardar mensaje:', error);
         res.status(500).json({ success: false, message: 'Hubo un error al enviar tu mensaje.' });
     }
 };
