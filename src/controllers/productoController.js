@@ -1,6 +1,6 @@
 import Producto from '../models/productoModel.js';
 
-// 1. Obtener Dashboard (Público y Admin)
+// 1. Obtener Dashboard (Diferencia entre Público y Admin)
 export const obtenerDashboardProductos = async (req, res) => {
     try {
         const buscar = req.query.buscar || "";
@@ -8,7 +8,13 @@ export const obtenerDashboardProductos = async (req, res) => {
         const limite = 10;
         const offset = (pagina - 1) * limite;
 
-        const result = await Producto.obtenerTodos(buscar, offset, limite);
+        /** * LÓGICA DE FILTRO: 
+         * Si req.user existe (pasó por verificarAdmin), mostramos todos.
+         * Si no existe req.user, es la parte pública: solo mostramos activos.
+         */
+        const esAdmin = req.user ? true : false;
+
+        const result = await Producto.obtenerTodos(buscar, offset, limite, esAdmin);
         
         let productoDestacado = null;
         if (result.productos && result.productos.length > 0) {
@@ -30,7 +36,7 @@ export const obtenerDashboardProductos = async (req, res) => {
     }
 };
 
-// 2. OBTENER DETALLE (La que faltaba y causaba el error)
+// 2. OBTENER DETALLE
 export const obtenerDetalleProducto = async (req, res) => {
     try {
         const { id } = req.params;
@@ -59,7 +65,6 @@ export const agregarProducto = async (req, res) => {
 // 4. Actualizar Producto
 export const actualizarProducto = async (req, res) => {
     const { id } = req.params;
-    // req.user viene del middleware verificarAdmin
     const usuario = { nombre: req.user.nombre, rol: req.user.rol }; 
 
     try {
