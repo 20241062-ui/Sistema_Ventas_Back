@@ -4,7 +4,7 @@ import { obtenerDashboardProductos, cambiarEstadoProducto } from '../controllers
 
 const router = express.Router();
 
-router.get('/', obtenerDashboardProductos); 
+router.get('/home', obtenerDashboardProductos); 
 router.patch('/estado/:id', cambiarEstadoProducto);
 
 export default router;
