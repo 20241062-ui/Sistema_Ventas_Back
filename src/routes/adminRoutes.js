@@ -1,12 +1,19 @@
 import express from 'express';
-import {verificarAdmin } from '../middlewares/authMiddleware.js';
-import {obtenerDashboardProductos, cambiarEstadoProducto, agregarProducto, eliminarProducto } from '../controllers/productoController.js'; 
+import { verificarAdmin } from '../middlewares/authMiddleware.js';
+import { 
+    obtenerDashboardProductos, 
+    agregarProducto, 
+    actualizarProducto, 
+    cambiarEstadoProducto, 
+    eliminarProducto 
+} from '../controllers/productoController.js';
 
 const router = express.Router();
 
 router.get('/productos', verificarAdmin, obtenerDashboardProductos);
-router.patch('/productos/estado/:id', verificarAdmin, cambiarEstadoProducto);
-router.post('/agregar', verificarAdmin, agregarProducto);
-router.delete('/eliminar/:id', verificarAdmin, eliminarProducto);
+router.post('/productos', verificarAdmin, agregarProducto); 
+router.put('/productos/:id', verificarAdmin, actualizarProducto); 
+router.patch('/productos/estado/:id', verificarAdmin, cambiarEstadoProducto); 
+router.delete('/productos/:id', verificarAdmin, eliminarProducto); 
 
 export default router;

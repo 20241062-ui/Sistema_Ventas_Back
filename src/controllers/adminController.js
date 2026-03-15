@@ -14,9 +14,7 @@ export const obtenerDashboardProductos = async (req, res) => {
         const [totalFiltradosData] = await db.query("CALL sp_contar_productos(?)", [busqueda]);
         const totalItems = totalFiltradosData[0][0]?.total || 0;
 
-     
         const [productosData] = await db.query("CALL sp_obtener_productos(?, ?, ?)", [busqueda, offset, limite]);
-       
         const listaProductos = productosData[0] || [];
 
         res.json({

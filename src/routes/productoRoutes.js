@@ -1,10 +1,9 @@
 import express from 'express';
-// Usar los nombres que ahora exportamos en el controlador
-import { obtenerDashboardProductos, cambiarEstadoProducto } from '../controllers/productoController.js';
+import { obtenerDashboardProductos, obtenerDetalleProducto } from '../controllers/productoController.js';
 
 const router = express.Router();
 
 router.get('/home', obtenerDashboardProductos); 
-router.patch('/estado/:id', cambiarEstadoProducto);
+router.get('/detalle/:id', obtenerDetalleProducto);
 
 export default router;
