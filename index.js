@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+dotenv.config();
 import cors from 'cors';
 import db from './src/config/BD.js';
 import authRoutes from './src/routes/authRoutes.js';
@@ -13,7 +14,7 @@ const app = express();
 app.get('/', (req, res) => {
     res.json({ mensaje: "El servidor raíz está vivo" });
 });
-dotenv.config();
+
 
 const corsOptions = {
     origin: 'https://20241062-ui.github.io', 

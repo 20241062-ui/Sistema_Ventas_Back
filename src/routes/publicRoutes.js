@@ -7,7 +7,8 @@ import {
     obtenerContactoInfo, 
     enviarMensajeContacto,
     obtenerMarcas,
-    obtenerCategorias
+    obtenerCategorias,
+    obtenerDashboardProductos
 } from '../controllers/publicController.js';
 
 const router = express.Router();
@@ -20,5 +21,6 @@ router.get('/contacto-info', obtenerContactoInfo);
 router.post('/enviar-mensaje', enviarMensajeContacto);
 router.get('/marcas', obtenerMarcas);
 router.get('/categorias', obtenerCategorias);
+router.get('/home', obtenerDashboardProductos);
 
 export default router;
