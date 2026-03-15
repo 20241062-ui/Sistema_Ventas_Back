@@ -51,25 +51,49 @@ export const agregarProducto = async (req, res) => {
 };
 
 export const actualizarProducto = async (req, res) => {
+    const { id } = req.params;
+    const { intid_Marca, intid_Categoria, vchNombre, vchDescripcion, floPrecioUnitario, intStock, floPrecioCompra } = req.body;
+    const { nombre, rol } = req.user; // Del Token
+
     try {
-        const { id } = req.params;
-        const usuario = { nombre: req.user.nombre, rol: req.user.rol }; // Viene del middleware de JWT
-        await Producto.actualizar(id, req.body, usuario);
-        res.json({ status: 'success', message: 'Producto actualizado correctamente' });
+        // 1. Actualizar datos generales
+        await db.query(
+            `UPDATE tblproductos SET intid_Marca=?, intid_Categoria=?, vchNombre=?, vchDescripcion=?, intStock=?, floPrecioCompra=? WHERE vchNo_Serie=?`,
+            [intid_Marca, intid_Categoria, vchNombre, vchDescripcion, intStock, floPrecioCompra, id]
+        );
+
+        // 2. Llamar al procedimiento de precio (como hacías en PHP)
+        await db.query("CALL sp_actualizar_precio(?, ?, ?, ?)", [id, floPrecioUnitario, nombre, rol]);
+
+        res.json({ mensaje: "Producto actualizado correctamente" });
     } catch (error) {
         res.status(500).json({ mensaje: error.message });
     }
 };
 
 export const cambiarEstadoProducto = async (req, res) => {
+    const { id } = req.params; 
+    const { estado } = req.body; 
+    const { nombre, rol } = req.user; 
+
     try {
-        const { id } = req.params;
-        const { estado } = req.body;
-        const usuario = { nombre: req.user.nombre, rol: req.user.rol };
-        await Producto.cambiarEstado(id, estado, usuario);
-        res.json({ status: 'success', message: `Producto ${estado == 1 ? 'activado' : 'desactivado'} correctamente` });
+        await db.query("SET @usuario_sistema = ?, @rol_usuario = ?", [nombre, rol]);
+
+        const [result] = await db.query(
+            "UPDATE tblproductos SET Estado = ? WHERE vchNo_Serie = ?",
+            [estado, id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ mensaje: "Producto no encontrado" });
+        }
+
+        res.json({ 
+            status: "success", 
+            mensaje: estado === 0 ? "Producto desactivado correctamente." : "Producto activado correctamente." 
+        });
     } catch (error) {
-        res.status(500).json({ status: 'error', mensaje: error.message });
+        res.status(500).json({ mensaje: "Error al actualizar el estado" });
     }
 };
 
