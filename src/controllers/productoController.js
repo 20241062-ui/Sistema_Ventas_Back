@@ -6,11 +6,23 @@ export const obtenerDashboardProductos = async (req, res) => {
         const pagina = parseInt(req.query.pagina) || 1;
         const limite = 10;
         const offset = (pagina - 1) * limite;
+
         const result = await Producto.obtenerTodos(buscar, offset, limite);
+        
+        let productoDestacado = null;
+        if (result.productos && result.productos.length > 0) {
+            const indiceAleatorio = Math.floor(Math.random() * result.productos.length);
+            productoDestacado = result.productos[indiceAleatorio];
+        }
+
         res.json({
+            hero: productoDestacado,
             productos: result.productos, 
             counts: result.stats,
-            pagination: { totalPages: Math.ceil(result.totalFiltrados / limite), currentPage: pagina }
+            pagination: {
+                totalPages: Math.ceil(result.totalFiltrados / limite), 
+                currentPage: pagina
+            }
         });
     } catch (error) {
         res.status(500).json({ mensaje: error.message });
