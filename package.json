@@ -4,7 +4,7 @@
   "description": "Sistema de Ventas API",
   "main": "index.js",
   "engines": {
-    "node": "18.x"
+    "node": "24.x"
   },               
   "type": "module",
   "scripts": {
