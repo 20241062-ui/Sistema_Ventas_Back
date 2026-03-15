@@ -10,6 +10,9 @@ import comprasRoutes from './src/routes/comprasRoutes.js';
 import productoRoutes from './src/routes/productoRoutes.js';
 
 const app = express();
+app.get('/', (req, res) => {
+    res.json({ mensaje: "El servidor raíz está vivo" });
+});
 dotenv.config();
 
 const corsOptions = {
