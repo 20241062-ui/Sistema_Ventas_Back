@@ -1,5 +1,6 @@
 import Producto from '../models/productoModel.js';
 
+// 1. Obtener Dashboard (Público y Admin)
 export const obtenerDashboardProductos = async (req, res) => {
     try {
         const buscar = req.query.buscar || "";
@@ -29,9 +30,25 @@ export const obtenerDashboardProductos = async (req, res) => {
     }
 };
 
+// 2. OBTENER DETALLE (La que faltaba y causaba el error)
+export const obtenerDetalleProducto = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const producto = await Producto.obtenerPorId(id);
+        
+        if (!producto) {
+            return res.status(404).json({ mensaje: "Producto no encontrado" });
+        }
+        
+        res.json(producto);
+    } catch (error) {
+        res.status(500).json({ mensaje: error.message });
+    }
+};
+
+// 3. Agregar Producto
 export const agregarProducto = async (req, res) => {
     try {
-        // Usamos el método crear de tu modelo
         await Producto.crear(req.body);
         res.json({ status: 'success', message: 'Producto agregado correctamente' });
     } catch (error) {
@@ -39,12 +56,13 @@ export const agregarProducto = async (req, res) => {
     }
 };
 
+// 4. Actualizar Producto
 export const actualizarProducto = async (req, res) => {
     const { id } = req.params;
-    const usuario = { nombre: req.user.nombre, rol: req.user.rol }; // Extraído del token
+    // req.user viene del middleware verificarAdmin
+    const usuario = { nombre: req.user.nombre, rol: req.user.rol }; 
 
     try {
-        // LLAMADA AL MODELO (No a db directamente)
         await Producto.actualizar(id, req.body, usuario);
         res.json({ mensaje: "Producto actualizado correctamente" });
     } catch (error) {
@@ -52,15 +70,14 @@ export const actualizarProducto = async (req, res) => {
     }
 };
 
+// 5. Cambiar Estado (Alta/Baja)
 export const cambiarEstadoProducto = async (req, res) => {
     const { id } = req.params; 
     const { estado } = req.body; 
     const usuario = { nombre: req.user.nombre, rol: req.user.rol };
 
     try {
-        // LLAMADA AL MODELO
         await Producto.cambiarEstado(id, estado, usuario);
-
         res.json({ 
             status: "success", 
             mensaje: estado === 0 ? "Producto desactivado correctamente." : "Producto activado correctamente." 
@@ -70,6 +87,7 @@ export const cambiarEstadoProducto = async (req, res) => {
     }
 };
 
+// 6. Eliminar (Físico)
 export const eliminarProducto = async (req, res) => {
     try {
         const { id } = req.params;
