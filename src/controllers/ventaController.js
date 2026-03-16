@@ -3,9 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
 
-    // CORRECCIÓN 1: La URL debe coincidir con el prefijo que definimos en index.js
-    // Quitamos el doble // y el /admin si tu ruta es /api/ventas
-    const API_URL = "https://sistemaventasback.vercel.app/api/ventas";
+const API_URL = "https://sistemaventasback.vercel.app/api/ventas";
 
     if (!id) {
         console.error("No se encontró el ID de la venta en la URL");
