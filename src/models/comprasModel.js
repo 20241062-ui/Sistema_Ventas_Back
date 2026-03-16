@@ -35,5 +35,46 @@ const obtenerCompraPorId = async (id) => {
         detalle: productos || []
     };
 }
+// Agrega esto a tu comprasModel.js existente
+const crearCompra = async (datos) => {
+    const { rfc, total, productos } = datos;
+    const connection = await db.getConnection(); // Necesitamos la conexión para la transacción
 
-export { obtenerCompras, obtenerCompraPorId }
+    try {
+        await connection.beginTransaction();
+
+        // 1. Insertar la compra (Cabecera)
+        const [resultCompra] = await connection.query(
+            "INSERT INTO tblcompra (RFC, Fecha, TotalCompra) VALUES (?, NOW(), ?)",
+            [rfc, total]
+        );
+        const id_Compra = resultCompra.insertId;
+
+        // 2. Insertar los productos y actualizar stock
+        for (const prod of productos) {
+            // Insertar detalle
+            await connection.query(
+                "INSERT INTO tbldetallecompra (id_Compra, vchNo_Serie, Cantidad, PrecioCompra) VALUES (?, ?, ?, ?)",
+                [id_Compra, prod.no_serie, prod.cantidad, prod.precio]
+            );
+
+            // Actualizar stock del producto automáticamente
+            await connection.query(
+                "UPDATE tblproductos SET intStock = intStock + ? WHERE vchNo_Serie = ?",
+                [prod.cantidad, prod.no_serie]
+            );
+        }
+
+        await connection.commit();
+        return { success: true, id_Compra };
+
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    } finally {
+        connection.release();
+    }
+};
+
+export { obtenerCompras, obtenerCompraPorId, crearCompra };
+
