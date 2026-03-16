@@ -52,8 +52,9 @@ const registrarCompra = async (req, res) => {
 /* 4. AUXILIAR: OBTENER PROVEEDORES (PARA SELECT) */
 const obtenerProveedoresParaSelect = async (req, res) => {
     try {
-        const [rows] = await db.query("SELECT vchRFC, vchNombre, vchRazon_Social FROM tblproveedor ORDER BY vchNombre ASC");
-        res.json(rows);
+        // El controlador ya no hace SQL, le pide al MODELO los datos
+        const proveedores = await comprasModel.obtenerProveedoresParaSelect();
+        res.json(proveedores);
     } catch (error) {
         res.status(500).json({ error: "Error al obtener proveedores" });
     }
@@ -62,8 +63,9 @@ const obtenerProveedoresParaSelect = async (req, res) => {
 /* 5. AUXILIAR: OBTENER PRODUCTOS (PARA SELECT) */
 const obtenerProductosParaSelect = async (req, res) => {
     try {
-        const [rows] = await db.query("SELECT vchNo_Serie, vchNombre FROM tblproductos WHERE intEstado = 1 ORDER BY vchNombre ASC");
-        res.json(rows);
+        // El controlador ya no hace SQL, le pide al MODELO los datos
+        const productos = await comprasModel.obtenerProductosParaSelect();
+        res.json(productos);
     } catch (error) {
         res.status(500).json({ error: "Error al obtener productos" });
     }

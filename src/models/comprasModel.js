@@ -95,4 +95,18 @@ const crearCompra = async (datos) => {
     }
 };
 
+export const obtenerProveedoresParaSelect = async () => {
+    const [rows] = await db.query(
+        "SELECT vchRFC, vchNombre, vchRazon_Social FROM tblproveedor ORDER BY vchNombre ASC"
+    );
+    return rows;
+};
+
+export const obtenerProductosParaSelect = async () => {
+    const [rows] = await db.query(
+        "SELECT vchNo_Serie, vchNombre FROM tblproductos WHERE Estado = 1 ORDER BY vchNombre ASC"
+    );
+    return rows;
+};
+
 export { obtenerCompras, obtenerCompraPorId, crearCompra };
