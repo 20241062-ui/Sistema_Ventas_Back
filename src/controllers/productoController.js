@@ -4,33 +4,31 @@ export const obtenerDashboardProductos = async (req, res) => {
     try {
         const buscar = req.query.buscar || "";
         const pagina = parseInt(req.query.pagina) || 1;
-        const limite = 10;
+        const limite = 12; // Cantidad para la galería
         const offset = (pagina - 1) * limite;
 
-        /** * LÓGICA DE FILTRO: 
-         * Si req.user existe (pasó por verificarAdmin), mostramos todos.
-         * Si no existe req.user, es la parte pública: solo mostramos activos.
-         */
-        const esAdmin = req.user ? true : false;
+        // 1. Llamamos al modelo (esAdmin = false para ver solo activos)
+        const result = await Producto.obtenerTodos(buscar, offset, limite, false);
 
-        const result = await Producto.obtenerTodos(buscar, offset, limite, esAdmin);
-        
+        // 2. Lógica para el HERO (Elegir uno al azar de los resultados)
         let productoDestacado = null;
         if (result.productos && result.productos.length > 0) {
             const indiceAleatorio = Math.floor(Math.random() * result.productos.length);
             productoDestacado = result.productos[indiceAleatorio];
         }
 
+        // 3. RESPUESTA COMPATIBLE CON HOME.JS
         res.json({
-            hero: productoDestacado,
+            hero: productoDestacado, // Esto es lo que le falta a tu front
             productos: result.productos, 
             counts: result.stats,
             pagination: {
-                totalPages: Math.ceil(result.totalFiltrados / limite), 
+                totalPages: Math.ceil(result.totalFiltrados / limite) || 1, 
                 currentPage: pagina
             }
         });
     } catch (error) {
+        console.error("Error en obtenerDashboardProductos:", error);
         res.status(500).json({ mensaje: error.message });
     }
 };
