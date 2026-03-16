@@ -1,33 +1,37 @@
-import * as comprasModel from "../models/comprasModel.js"
+import * as comprasModel from "../models/comprasModel.js";
+import db from "../config/BD.js"; // IMPORTANTE: Agregado para que funcionen las consultas directas
 
+/* 1. LISTAR TODAS LAS COMPRAS */
 const listarCompras = async (req, res) => {
     try {
-        const compras = await comprasModel.obtenerCompras()
+        const compras = await comprasModel.obtenerCompras();
         res.json({
             total: compras.length,
             compras: compras
-        })
+        });
     } catch (error) {
-        res.status(500).json({ error: "Error obteniendo compras" })
+        res.status(500).json({ error: "Error obteniendo compras" });
     }
-}
+};
 
+/* 2. VER DETALLE DE UNA COMPRA */
 const verCompra = async (req, res) => {
     try {
-        const { id } = req.params
-        const resultado = await comprasModel.obtenerCompraPorId(id)
+        const { id } = req.params;
+        const resultado = await comprasModel.obtenerCompraPorId(id);
 
         if (!resultado.compra) {
-            return res.status(404).json({ error: "Compra no encontrada" })
+            return res.status(404).json({ error: "Compra no encontrada" });
         }
-        res.json(resultado)
+        res.json(resultado);
 
     } catch (error) {
         console.error("Error en verCompra:", error);
-        res.status(500).json({ error: "Error obteniendo detalle" })
+        res.status(500).json({ error: "Error obteniendo detalle" });
     }
-}
+};
 
+/* 3. REGISTRAR UNA NUEVA COMPRA (TRANSACCIÓN) */
 const registrarCompra = async (req, res) => {
     try {
         const { rfc, total, productos } = req.body;
@@ -45,4 +49,31 @@ const registrarCompra = async (req, res) => {
     }
 };
 
-export { listarCompras, verCompra, registrarCompra }
+/* 4. AUXILIAR: OBTENER PROVEEDORES (PARA SELECT) */
+const obtenerProveedoresParaSelect = async (req, res) => {
+    try {
+        const [rows] = await db.query("SELECT vchRFC, vchNombre, vchRazon_Social FROM tblproveedor ORDER BY vchNombre ASC");
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener proveedores" });
+    }
+};
+
+/* 5. AUXILIAR: OBTENER PRODUCTOS (PARA SELECT) */
+const obtenerProductosParaSelect = async (req, res) => {
+    try {
+        const [rows] = await db.query("SELECT vchNo_Serie, vchNombre FROM tblproductos WHERE intEstado = 1 ORDER BY vchNombre ASC");
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener productos" });
+    }
+};
+
+// EXPORTACIÓN ÚNICA (Limpia y sin conflictos)
+export { 
+    listarCompras, 
+    verCompra, 
+    registrarCompra, 
+    obtenerProveedoresParaSelect, 
+    obtenerProductosParaSelect 
+};
