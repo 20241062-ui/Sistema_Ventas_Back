@@ -25,12 +25,13 @@ export const obtenerDetalleVenta = async (req, res) => {
             return res.status(404).json({ mensaje: "Venta no encontrada" });
         }
 
+        // Enviamos la respuesta limpia al frontend
         res.json({
             venta: data.venta,
-            detalle: data.productos
+            detalle: data.productos // El frontend suele buscar "detalle" para el bucle de productos
         });
     } catch (error) {
         console.error("Error detalle venta:", error);
-        res.status(500).json({ mensaje: "Error al obtener detalle", error: error.message });
+        res.status(500).json({ mensaje: "Error en el servidor", error: error.message });
     }
 };
