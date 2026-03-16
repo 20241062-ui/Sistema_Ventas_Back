@@ -4,7 +4,7 @@ import {obtenerVentas,obtenerDetalleVenta} from '../controllers/ventaController.
 
 const router = express.Router();
 
-router.get('/ventas', verificarAdmin, obtenerVentas);
-router.get('/ventas/:id', verificarAdmin, obtenerDetalleVenta);
+router.get('/', verificarAdmin, obtenerVentas);
+router.get('/:id', verificarAdmin, obtenerDetalleVenta);
 
 export default router;
