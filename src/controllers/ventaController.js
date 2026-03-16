@@ -1,63 +1,52 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    const token = localStorage.getItem('token');
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
+import Venta from '../models/ventaModel.js';
 
-const API_URL = "https://sistemaventasback.vercel.app/api/ventas";
-
-    if (!id) {
-        console.error("No se encontró el ID de la venta en la URL");
-        return;
-    }
+/* LISTAR VENTAS */
+export const obtenerVentas = async (req, res) => {
+    const busqueda = req.query.buscar || "";
 
     try {
-        const res = await fetch(`${API_URL}/${id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        // Usamos el modelo que ya definiste
+        const ventas = await Venta.listar(busqueda);
+        const total = await Venta.contarTotal();
 
-        if (!res.ok) throw new Error("Error al obtener los datos del servidor");
-
-        const data = await res.json();
-
-        // CORRECCIÓN 2: Validación de datos
-        // Usamos cortocircuitos (||) por si el backend devuelve nombres de columnas distintos
-        const venta = data.venta;
-        const detalle = data.detalle || [];
-
-        if (!venta) {
-            alert("No se encontró la información de la venta.");
-            return;
-        }
-
-        // Llenar datos generales
-        document.getElementById("titulo-venta").textContent = `Detalle de la Venta #${id}`;
-        document.getElementById("cliente").textContent = venta.vchNombreCliente || venta.nombre_cliente || "N/A";
-        document.getElementById("fecha").textContent = venta.dtFechaVenta || venta.Fecha_Venta || "N/A";
-        document.getElementById("total-productos").textContent = detalle.length;
-        document.getElementById("total").textContent = `$${parseFloat(venta.floTotalVenta || venta.Total_Venta).toFixed(2)}`;
-
-        const tbody = document.getElementById("tabla-detalle");
-        tbody.innerHTML = ""; // Limpiar antes de llenar
-
-        // Llenar tabla
-        detalle.forEach(p => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${p.vchNo_Serie || p.No_Serie}</td>
-                <td>${p.vchNombreProducto || p.producto}</td>
-                <td>${p.vchDescripcion || p.descripcion || ''}</td>
-                <td>$${parseFloat(p.floPrecioUnitario || p.PrecioUnitario).toFixed(2)}</td>
-                <td>${p.intCantidad || p.Cantidad}</td>
-                <td>$${parseFloat(p.floSubtotal || p.Subtotal).toFixed(2)}</td>
-            `;
-            tbody.appendChild(tr);
+        res.json({
+            total,
+            ventas
         });
 
     } catch (error) {
-        console.error("Error en el detalle:", error);
-        const tbody = document.getElementById("tabla-detalle");
-        if (tbody) tbody.innerHTML = `<tr><td colspan="6">Error al cargar el detalle: ${error.message}</td></tr>`;
+        console.error("Error obtenerVentas:", error);
+        res.status(500).json({
+            mensaje: "Error al obtener ventas",
+            error: error.message
+        });
     }
-});
+};
+
+/* DETALLE DE VENTA */
+export const obtenerDetalleVenta = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // El modelo ya maneja la lógica de los índices [0] y [1] del CALL
+        const data = await Venta.obtenerPorId(id);
+
+        if (!data.venta) {
+            return res.status(404).json({
+                mensaje: "Venta no encontrada"
+            });
+        }
+
+        res.json({
+            venta: data.venta,
+            detalle: data.productos
+        });
+
+    } catch (error) {
+        console.error("Error detalle venta:", error);
+        res.status(500).json({
+            mensaje: "Error al obtener detalle",
+            error: error.message
+        });
+    }
+};
