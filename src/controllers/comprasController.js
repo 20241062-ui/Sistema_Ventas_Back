@@ -1,7 +1,7 @@
 import * as comprasModel from "../models/comprasModel.js";
 
 /* 1. LISTAR TODAS LAS COMPRAS */
-const listarCompras = async (req, res) => {
+export const listarCompras = async (req, res) => {
     try {
         const compras = await comprasModel.obtenerCompras();
         res.json({
@@ -35,7 +35,7 @@ export const verCompra = async (req, res) => {
 };
 
 /* 3. REGISTRAR UNA NUEVA COMPRA (TRANSACCIÓN) */
-const registrarCompra = async (req, res) => {
+export const registrarCompra = async (req, res) => {
     try {
         const { rfc, total, productos } = req.body;
 
@@ -53,7 +53,7 @@ const registrarCompra = async (req, res) => {
 };
 
 /* 4. AUXILIAR: OBTENER PROVEEDORES (PARA SELECT) */
-const obtenerProveedoresParaSelect = async (req, res) => {
+export const obtenerProveedoresParaSelect = async (req, res) => {
     try {
         // El controlador ya no hace SQL, le pide al MODELO los datos
         const proveedores = await comprasModel.obtenerProveedoresParaSelect();
@@ -64,7 +64,7 @@ const obtenerProveedoresParaSelect = async (req, res) => {
 };
 
 /* 5. AUXILIAR: OBTENER PRODUCTOS (PARA SELECT) */
-const obtenerProductosParaSelect = async (req, res) => {
+export const obtenerProductosParaSelect = async (req, res) => {
     try {
         // El controlador ya no hace SQL, le pide al MODELO los datos
         const productos = await comprasModel.obtenerProductosParaSelect();
@@ -74,11 +74,3 @@ const obtenerProductosParaSelect = async (req, res) => {
     }
 };
 
-// EXPORTACIÓN ÚNICA (Limpia y sin conflictos)
-export { 
-    listarCompras, 
-    verCompra, 
-    registrarCompra, 
-    obtenerProveedoresParaSelect, 
-    obtenerProductosParaSelect 
-};
