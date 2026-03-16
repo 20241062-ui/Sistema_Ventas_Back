@@ -1,5 +1,4 @@
 import * as comprasModel from "../models/comprasModel.js";
-import db from "../config/BD.js"; // IMPORTANTE: Agregado para que funcionen las consultas directas
 
 /* 1. LISTAR TODAS LAS COMPRAS */
 const listarCompras = async (req, res) => {
@@ -23,11 +22,12 @@ const verCompra = async (req, res) => {
         if (!resultado.compra) {
             return res.status(404).json({ error: "Compra no encontrada" });
         }
+        
         res.json(resultado);
 
     } catch (error) {
         console.error("Error en verCompra:", error);
-        res.status(500).json({ error: "Error obteniendo detalle" });
+        res.status(500).json({ error: "Error obteniendo detalle de la base de datos" });
     }
 };
 
