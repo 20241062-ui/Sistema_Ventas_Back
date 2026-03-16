@@ -20,8 +20,6 @@ const verCompra = async (req, res) => {
         if (!resultado.compra) {
             return res.status(404).json({ error: "Compra no encontrada" })
         }
-
-        // Enviamos el objeto con 'compra' y 'detalle'
         res.json(resultado)
 
     } catch (error) {
@@ -29,7 +27,8 @@ const verCompra = async (req, res) => {
         res.status(500).json({ error: "Error obteniendo detalle" })
     }
 }
-export const registrarCompra = async (req, res) => {
+
+const registrarCompra = async (req, res) => {
     try {
         const { rfc, total, productos } = req.body;
 
