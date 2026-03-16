@@ -1,6 +1,5 @@
 import Producto from '../models/productoModel.js';
 
-// 1. Obtener Dashboard (Diferencia entre Público y Admin)
 export const obtenerDashboardProductos = async (req, res) => {
     try {
         const buscar = req.query.buscar || "";
@@ -36,7 +35,7 @@ export const obtenerDashboardProductos = async (req, res) => {
     }
 };
 
-// 2. OBTENER DETALLE
+// 2. OBTENER DETALLE (La que faltaba y causaba el error)
 export const obtenerDetalleProducto = async (req, res) => {
     try {
         const { id } = req.params;
@@ -65,6 +64,7 @@ export const agregarProducto = async (req, res) => {
 // 4. Actualizar Producto
 export const actualizarProducto = async (req, res) => {
     const { id } = req.params;
+    // req.user viene del middleware verificarAdmin
     const usuario = { nombre: req.user.nombre, rol: req.user.rol }; 
 
     try {
