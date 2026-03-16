@@ -28,8 +28,13 @@ export const obtenerDashboardProductos = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Error en obtenerDashboardProductos:", error);
-        res.status(500).json({ mensaje: error.message });
+        console.error("ERROR CRÍTICO:", error);
+        // CAMBIA ESTO PARA DIAGNOSTICAR:
+        res.status(500).json({ 
+            mensaje: "Error en el servidor", 
+            sqlError: error.message, // <--- Esto te dirá exactamente qué columna falta
+            pila: error.stack 
+        });
     }
 };
 
