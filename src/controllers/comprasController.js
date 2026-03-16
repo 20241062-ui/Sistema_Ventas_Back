@@ -14,20 +14,23 @@ const listarCompras = async (req, res) => {
 };
 
 /* 2. VER DETALLE DE UNA COMPRA */
-const verCompra = async (req, res) => {
+export const verCompra = async (req, res) => {
+    const { id } = req.params;
     try {
-        const { id } = req.params;
         const resultado = await comprasModel.obtenerCompraPorId(id);
 
         if (!resultado.compra) {
-            return res.status(404).json({ error: "Compra no encontrada" });
+            return res.status(404).json({ error: `La compra ${id} no existe.` });
         }
         
         res.json(resultado);
-
     } catch (error) {
-        console.error("Error en verCompra:", error);
-        res.status(500).json({ error: "Error obteniendo detalle de la base de datos" });
+        // IMPORTANTE: Esto te dirá el error real en el JSON de respuesta
+        res.status(500).json({ 
+            error: "Error en la base de datos",
+            sqlMessage: error.sqlMessage, // Ejemplo: "Unknown column 'id_Compra' in 'where clause'"
+            code: error.code 
+        });
     }
 };
 

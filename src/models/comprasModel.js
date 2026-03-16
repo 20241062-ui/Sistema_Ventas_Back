@@ -15,31 +15,40 @@ const obtenerCompras = async () => {
 /**
  * OBTENER DETALLE DE UNA COMPRA POR ID
  */
-const obtenerCompraPorId = async (id) => {
-    // 1. Obtenemos los datos generales de la compra (Cabecera)
-    const [compra] = await db.query(`
-        SELECT id_Compra, RFC, TotalCompra, Fecha 
-        FROM tblcompra 
-        WHERE id_Compra = ?`, [id]);
+export const obtenerCompraPorId = async (id) => {
+    try {
+        // 1. Cabecera de la compra
+        // Asegúrate que las columnas sean id_Compra, RFC, TotalCompra
+        const [compra] = await db.query(`
+            SELECT id_Compra, RFC, TotalCompra, Fecha 
+            FROM tblcompra 
+            WHERE id_Compra = ?`, [id]);
 
-    // 2. Obtenemos el detalle de los productos vinculados
-    const [productos] = await db.query(`
-        SELECT 
-            d.vchNo_Serie AS No_Serie,
-            p.vchNombre AS producto,
-            p.vchDescripcion AS descripcion,
-            d.intCantidad AS Cantidad,
-            d.floPrecioCompra AS PrecioCompra,
-            (d.intCantidad * d.floPrecioCompra) AS subtotal
-        FROM tbldetallecompra d
-        INNER JOIN tblproductos p ON d.vchNo_Serie = p.vchNo_Serie
-        WHERE d.id_Compra = ?
-    `, [id]);
+        if (compra.length === 0) return { compra: null, detalle: [] };
 
-    return {
-        compra: compra[0] || null,
-        detalle: productos || []
-    };
+        // 2. Detalle de la compra
+        // Usamos 'tbldetallecompra' (el nombre que me confirmaste)
+        const [productos] = await db.query(`
+            SELECT 
+                d.vchNo_Serie AS No_Serie,
+                p.vchNombre AS producto,
+                d.intCantidad AS Cantidad,
+                d.floPrecioCompra AS PrecioCompra,
+                (d.intCantidad * d.floPrecioCompra) AS subtotal
+            FROM tbldetallecompra d
+            INNER JOIN tblproductos p ON d.vchNo_Serie = p.vchNo_Serie
+            WHERE d.id_Compra = ?
+        `, [id]);
+
+        return {
+            compra: compra[0],
+            detalle: productos
+        };
+    } catch (error) {
+        // Esto aparecerá en tus logs de Vercel/Node
+        console.error("DETALLE ERROR SQL:", error.message);
+        throw error; 
+    }
 };
 
 /**
