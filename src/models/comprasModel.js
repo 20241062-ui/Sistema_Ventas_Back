@@ -3,7 +3,7 @@ import db from "../config/BD.js";
 /**
  * LISTAR TODAS LAS COMPRAS
  */
-const obtenerCompras = async () => {
+export const obtenerCompras = async () => {
     const [rows] = await db.query(`
         SELECT id_Compra, RFC, TotalCompra, Fecha
         FROM tblcompra
@@ -54,7 +54,7 @@ export const obtenerCompraPorId = async (id) => {
 /**
  * REGISTRAR NUEVA COMPRA (CON TRANSACCIÓN Y ACTUALIZACIÓN DE STOCK)
  */
-const crearCompra = async (datos) => {
+export const crearCompra = async (datos) => {
     const { rfc, total, productos } = datos;
     
     // Obtenemos una conexión individual del pool para manejar la transacción
@@ -117,5 +117,3 @@ export const obtenerProductosParaSelect = async () => {
     );
     return rows;
 };
-
-export { obtenerCompras, obtenerCompraPorId, crearCompra };
