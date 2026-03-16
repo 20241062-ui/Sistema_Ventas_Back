@@ -1,47 +1,33 @@
 import * as comprasModel from "../models/comprasModel.js"
 
-const listarCompras = async (req,res) => {
-
-    try{
-
+const listarCompras = async (req, res) => {
+    try {
         const compras = await comprasModel.obtenerCompras()
-
         res.json({
-            total:compras.length,
-            compras:compras
+            total: compras.length,
+            compras: compras
         })
-
-    }catch(error){
-
-        res.status(500).json({
-            error:"Error obteniendo compras"
-        })
-
+    } catch (error) {
+        res.status(500).json({ error: "Error obteniendo compras" })
     }
-
 }
 
-const verCompra = async (req,res) => {
+const verCompra = async (req, res) => {
+    try {
+        const { id } = req.params
+        const resultado = await comprasModel.obtenerCompraPorId(id)
 
-    try{
+        if (!resultado.compra) {
+            return res.status(404).json({ error: "Compra no encontrada" })
+        }
 
-        const {id} = req.params
+        // Enviamos el objeto con 'compra' y 'detalle'
+        res.json(resultado)
 
-        const detalle = await comprasModel.obtenerCompraPorId(id)
-
-        res.json(detalle)
-
-    }catch(error){
-
-        res.status(500).json({
-            error:"Error obteniendo detalle"
-        })
-
+    } catch (error) {
+        console.error("Error en verCompra:", error);
+        res.status(500).json({ error: "Error obteniendo detalle" })
     }
-
 }
 
-export {
-    listarCompras,
-    verCompra
-}
+export { listarCompras, verCompra }
