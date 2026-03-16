@@ -1,4 +1,5 @@
-import db from '../config/BD.js';
+// IMPORTANTE: Ya NO importamos 'db', solo el Modelo
+import Producto from '../models/productoModel.js';
 
 export const obtenerDashboardProductos = async (req, res) => {
     const busqueda = req.query.buscar || "";
@@ -7,22 +8,15 @@ export const obtenerDashboardProductos = async (req, res) => {
     const offset = (pagina - 1) * limite;
 
     try {
-        const [totalRes] = await db.query("SELECT fn_contar_productos_por_estado(-1) AS total");
-        const [activosRes] = await db.query("SELECT fn_contar_productos_por_estado(1) AS activos");
-        const [inactivosRes] = await db.query("SELECT fn_contar_productos_por_estado(0) AS inactivos");
+        // 1. Pedimos las estadísticas al modelo
+        const counts = await Producto.obtenerEstadisticas();
 
-        const [totalFiltradosData] = await db.query("CALL sp_contar_productos(?)", [busqueda]);
-        const totalItems = totalFiltradosData[0][0]?.total || 0;
+        // 2. Pedimos los datos del dashboard (Procedimientos) al modelo
+        const { totalItems, listaProductos } = await Producto.obtenerDashboard(busqueda, offset, limite);
 
-        const [productosData] = await db.query("CALL sp_obtener_productos(?, ?, ?)", [busqueda, offset, limite]);
-        const listaProductos = productosData[0] || [];
-
+        // 3. Respondemos con el formato que espera el Frontend
         res.json({
-            counts: {
-                total: totalRes[0]?.total || 0,
-                activos: activosRes[0]?.activos || 0,
-                inactivos: inactivosRes[0]?.inactivos || 0
-            },
+            counts: counts,
             productos: listaProductos,
             pagination: {
                 totalItems,
@@ -32,20 +26,19 @@ export const obtenerDashboardProductos = async (req, res) => {
         });
     } catch (error) {
         console.error("Error en obtenerDashboardProductos:", error);
-        res.status(500).json({ 
-            mensaje: "Error interno del servidor al procesar el dashboard",
-            error: error.message 
-        });
+        res.status(500).json({ mensaje: "Error al procesar el dashboard" });
     }
 };
 
 export const cambiarEstadoProducto = async (req, res) => {
     const { id } = req.params;
-    const { estado } = req.body; // 1 o 0
+    const { estado } = req.body; 
+
     try {
-        await db.query("UPDATE tblproducto SET Estado = ? WHERE vchNo_Serie = ?", [estado, id]);
+        // Le ordenamos al modelo cambiar el estado
+        await Producto.cambiarEstado(id, estado);
         res.json({ message: "Estado actualizado correctamente" });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: "No se pudo cambiar el estado" });
     }
 };

@@ -96,9 +96,16 @@ export const cambiarEstadoProducto = async (req, res) => {
 export const eliminarProducto = async (req, res) => {
     try {
         const { id } = req.params;
-        await Producto.eliminar(id);
-        res.json({ status: 'success', message: 'Producto eliminado físicamente' });
+        const usuario = { nombre: req.user.nombre, rol: req.user.rol };
+
+        // En lugar de Producto.eliminar (que hace DELETE), usamos cambiarEstado a 0
+        await Producto.cambiarEstado(id, 0, usuario);
+        
+        res.json({ 
+            status: 'success', 
+            message: 'Producto dado de baja correctamente (Estado inactivo)' 
+        });
     } catch (error) {
-        res.status(500).json({ mensaje: error.message });
+        res.status(500).json({ mensaje: "Error al procesar la baja" });
     }
 };
