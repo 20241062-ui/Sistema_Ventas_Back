@@ -16,10 +16,10 @@ router.post('/productos', verificarAdmin, agregarProducto);
 router.put('/productos/:id', verificarAdmin, actualizarProducto); 
 router.patch('/productos/estado/:id', verificarAdmin, cambiarEstadoProducto); 
 router.delete('/productos/:id', verificarAdmin, eliminarProducto); 
-router.get('/marcas', marcaCtrl.listarMarcas);
-router.get('/marcas/:id', marcaCtrl.obtenerMarca);
-router.post('/marcas', marcaCtrl.guardarMarca);
-router.put('/marcas/:id', marcaCtrl.actualizarMarca);
-router.delete('/marcas/:id', marcaCtrl.eliminarMarca);
+router.get('/marcas', verificarAdmin, marcaCtrl.listarMarcas);
+router.get('/marcas/:id', verificarAdmin, marcaCtrl.obtenerMarca);
+router.post('/marcas', verificarAdmin, marcaCtrl.guardarMarca);
+router.put('/marcas/:id', verificarAdmin, marcaCtrl.actualizarMarca);
+router.delete('/marcas/:id', verificarAdmin, marcaCtrl.eliminarMarca);
 
 export default router;
