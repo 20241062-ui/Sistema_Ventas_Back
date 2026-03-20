@@ -31,7 +31,6 @@ export const obtenerSucursales = async (req, res) => {
     try {
         const rows = await publicModel.getSucursales();
         
-        // La lógica de transformación sigue en el controlador (es lógica de negocio/presentación)
         const sucursales = rows.map(s => ({
             ...s,
             vchlink_mapa: s.vchlink_mapa.replace('/viewer?', '/embed?')

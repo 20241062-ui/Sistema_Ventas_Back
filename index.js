@@ -25,17 +25,14 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Manejo de pre-flight requests
+app.options('*', cors(corsOptions));
 
-// 2. JERARQUÍA DE PARSEO
 app.use(express.json());
 
-// 3. RUTAS RAÍZ / SALUD DEL SERVIDOR
 app.get('/', (req, res) => {
     res.json({ mensaje: "API de Sistema de Ventas funcionando correctamente" });
 });
 
-// 4. JERARQUÍA DE RUTAS DE LA API
 app.use('/api/auth', authRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/compras', comprasRoutes);
@@ -43,7 +40,6 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/ventas', ventaRoutes);
 app.use('/api/productos', productoRoutes);
 
-// 5. PRUEBA DE CONEXIÓN (Mantenida para diagnóstico)
 app.get('/api/prueba-db', async (req, res) => {
     try {
         const [rows] = await db.query('SELECT 1 + 1 AS resultado');
@@ -59,5 +55,4 @@ app.get('/api/prueba-db', async (req, res) => {
     }
 });
 
-// Para despliegue en Vercel
 export default app;

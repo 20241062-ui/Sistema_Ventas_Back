@@ -6,7 +6,6 @@ export const actualizarDatosPerfil = async (req, res) => {
     const userId = req.usuarioId;
 
     try {
-        // 1. Obtener la contraseña actual por si no se desea cambiar
         const [user] = await db.query('SELECT vchPassword FROM tblcliente WHERE id_usuario = ?', [userId]);
         
         let passwordFinal = user[0].vchPassword;
@@ -14,7 +13,6 @@ export const actualizarDatosPerfil = async (req, res) => {
             passwordFinal = await bcrypt.hash(vchpassword, 10);
         }
 
-        // 2. Ejecutar el UPDATE
         await db.query(
             `UPDATE tblcliente SET vchNombre = ?, vchApellido_Paterno = ?, vchApellido_Materno = ?, vchTelefono = ?, vchPassword = ? 
             WHERE id_usuario = ?`,
@@ -29,7 +27,6 @@ export const actualizarDatosPerfil = async (req, res) => {
 
 export const obtenerDatosPerfil = async (req, res) => {
     try {
-        // req.usuarioId viene del middleware de verificación de token
         const [rows] = await db.query(
             'SELECT vchNombre, vchApellido_Paterno, vchApellido_Materno, vchCorreo FROM tblcliente WHERE id_usuario = ?', 
             [req.usuarioId]

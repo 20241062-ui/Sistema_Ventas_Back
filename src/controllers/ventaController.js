@@ -1,11 +1,9 @@
 import Venta from '../models/ventaModel.js';
 
-/* LISTAR VENTAS */
 export const obtenerVentas = async (req, res) => {
     const busqueda = req.query.buscar || "";
 
     try {
-        // Usamos el modelo que ya definiste
         const ventas = await Venta.listar(busqueda);
         const total = await Venta.contarTotal();
 
@@ -23,12 +21,10 @@ export const obtenerVentas = async (req, res) => {
     }
 };
 
-/* DETALLE DE VENTA */
 export const obtenerDetalleVenta = async (req, res) => {
     const { id } = req.params;
 
     try {
-        // El modelo ya maneja la lógica de los índices [0] y [1] del CALL
         const data = await Venta.obtenerPorId(id);
 
         if (!data.venta) {
