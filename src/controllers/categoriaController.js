@@ -45,8 +45,8 @@ export const eliminarCategoria = async (req, res) => {
     try {
         const { id } = req.params;
         await Categoria.eliminarLogico(id);
-        res.json({ status: "success", mensaje: "Categoría eliminada correctamente" });
+        res.json({ status: "success", mensaje: "Categoría dada de baja del sistema correctamente" });
     } catch (error) {
-        res.status(500).json({ mensaje: "Error al eliminar la categoría" });
+        res.status(500).json({ mensaje: "Error al dar de baja la categoría" });
     }
 };
