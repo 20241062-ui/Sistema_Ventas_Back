@@ -51,9 +51,7 @@ export const obtenerCompraPorId = async (id) => {
     }
 };
 
-/**
- * REGISTRAR NUEVA COMPRA (CON TRANSACCIÓN Y ACTUALIZACIÓN DE STOCK)
- */
+
 export const crearCompra = async (datos) => {
     const { rfc, total, productos } = datos;
     
@@ -61,10 +59,11 @@ export const crearCompra = async (datos) => {
     const connection = await db.getConnection();
 
     try {
-        // Iniciamos la transacción: Si algo falla de aquí en adelante, nada se guarda
+        // Iniciamos la transacción
         await connection.beginTransaction();
 
         // 1. Insertar la cabecera de la compra
+        // Nota: Asegúrate que la tabla se llame 'tblcompra' y las columnas 'RFC', 'Fecha', 'TotalCompra'
         const [resultCompra] = await connection.query(
             "INSERT INTO tblcompra (RFC, Fecha, TotalCompra) VALUES (?, NOW(), ?)",
             [rfc, total]
@@ -74,32 +73,42 @@ export const crearCompra = async (datos) => {
 
         // 2. Insertar cada producto en el detalle y actualizar su stock
         for (const prod of productos) {
-            // Insertar en la tabla de detalles
-            // Nota: Verifica que los nombres de columnas coincidan con tu base de datos
+            // INSERT EN DETALLE (Ajustado a tus nombres de columnas reales)
             await connection.query(
-                "INSERT INTO tbldetallecompra (id_Compra, vchNo_Serie, intCantidad, floPrecioCompra) VALUES (?, ?, ?, ?)",
-                [id_Compra, prod.no_serie, prod.cantidad, prod.precio]
+                `INSERT INTO tbldetallecompra 
+                (id_Compra, Cantidad, PrecioCompra, PrecioVenta, FechaGarantia, No_Serie) 
+                VALUES (?, ?, ?, ?, ?, ?)`,
+                [
+                    id_Compra, 
+                    prod.cantidad, 
+                    prod.precio, 
+                    (prod.precio * 1.25), // Calculamos un precio de venta sugerido (25% de ganancia)
+                    '2027-03-19',         // Fecha de garantía (1 año a partir de hoy)
+                    prod.no_serie         // El ID del producto que viene del front
+                ]
             );
 
-            // Actualizar el stock del producto sumando lo comprado
+            // ACTUALIZAR STOCK
+            // Nota: Verifica si en tblproductos la columna es 'vchNo_Serie' o 'No_Serie'
             await connection.query(
                 "UPDATE tblproductos SET intStock = intStock + ? WHERE vchNo_Serie = ?",
                 [prod.cantidad, prod.no_serie]
             );
         }
 
-        // Si todo salió bien, confirmamos los cambios en la BD
+        // Si todo salió bien, confirmamos los cambios
         await connection.commit();
         
-        return { success: true, id_Compra };
+        // Retornamos el id_Compra para que el controlador pueda usarlo en el correo
+        return { success: true, id_Compra: id_Compra };
 
     } catch (error) {
-        // Si hubo un error (ej. se fue el internet o falló un ID), deshacemos todo
+        // Si hubo un error, deshacemos todo para no dejar datos a medias
         await connection.rollback();
-        console.error("Error en la transacción de compra:", error);
-        throw error; // Lanzamos el error para que el controlador lo atrape
+        console.error(" Error en la transacción de compra:", error);
+        throw error; 
     } finally {
-        // IMPORTANTE: Liberamos la conexión de vuelta al pool para evitar que el servidor se bloquee
+        // Liberamos la conexión de vuelta al pool
         connection.release();
     }
 };
