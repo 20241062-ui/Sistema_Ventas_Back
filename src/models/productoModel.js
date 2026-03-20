@@ -24,7 +24,6 @@ const Producto = {
             productos = resultProd[0]; 
             totalFiltrados = resultTotal[0][0]?.total || 0;
         } else {
-            // VERIFICADO: p.Estado coincide con tu campo 'Estado'
             const sqlPublico = `
                 SELECT p.*, m.vchNombre AS Marca, c.vchNombre AS Categoria
                 FROM tblproductos p
@@ -58,7 +57,6 @@ const Producto = {
     },
 
     obtenerPorId: async (id) => {
-        // VERIFICADO: Join con tblmarcas usando intid_Marca
         const sql = `SELECT p.*, m.vchNombre AS Marca 
                     FROM tblproductos p 
                     INNER JOIN tblmarcas m ON p.intid_Marca = m.intid_Marca 
@@ -69,7 +67,6 @@ const Producto = {
 
     crear: async (datos) => {
         const { vchNo_Serie, vchNombre, vchDescripcion, floPrecioUnitario, floPrecioCompra, intStock, intid_Categoria, intid_Marca, vchImagen } = datos;
-        // VERIFICADO: Los nombres de los campos coinciden con tu lista de tblproductos
         const sql = `INSERT INTO tblproductos (vchNo_Serie, vchNombre, vchDescripcion, floPrecioUnitario, floPrecioCompra, intStock, intid_Categoria, intid_Marca, vchImagen, Estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`;
         return await db.query(sql, [vchNo_Serie, vchNombre, vchDescripcion, floPrecioUnitario, floPrecioCompra, intStock, intid_Categoria, intid_Marca, vchImagen]);
     },
@@ -77,7 +74,6 @@ const Producto = {
     actualizar: async (id, datos, usuario) => {
         const { intid_Marca, intid_Categoria, vchNombre, vchDescripcion, vchImagen, intStock, floPrecioCompra, floPrecioUnitario } = datos;
         
-        // VERIFICADO: Campos de UPDATE coinciden con tblproductos
         await db.query(`UPDATE tblproductos SET intid_Marca=?, intid_Categoria=?, vchNombre=?, vchDescripcion=?, vchImagen=?, intStock=?, floPrecioCompra=? WHERE vchNo_Serie=?`, 
             [intid_Marca, intid_Categoria, vchNombre, vchDescripcion, vchImagen, intStock, floPrecioCompra, id]);
         
@@ -86,13 +82,11 @@ const Producto = {
 
     cambiarEstado: async (id, estado, usuario) => { 
         await db.query('SET @usuario_sistema = ?, @rol_usuario = ?', [usuario.nombre, usuario.rol]);
-        // VERIFICADO: Campo 'Estado' y llave 'vchNo_Serie'
         return await db.query('UPDATE tblproductos SET Estado = ? WHERE vchNo_Serie = ?', [estado, id]);
     },
 
     eliminar: async (id, usuario) => {
         await db.query('SET @usuario_sistema = ?, @rol_usuario = ?', [usuario.nombre, usuario.rol]);
-        // BAJA LÓGICA: Estado = 0
         return await db.query('UPDATE tblproductos SET Estado = 0 WHERE vchNo_Serie = ?', [id]);
     }
 };
