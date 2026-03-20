@@ -1,9 +1,6 @@
 export const enviarFacturaBrevo = async (datos) => {
     const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
-    // Tu API Key de Brevo
-    const API_KEY = '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'; 
-
-    // Mapeo de los productos que vienen del carrito (Frontend)
+    const API_KEY = process.env.BREVO_API_KEY;
     const filasProductos = datos.productos.map(p => `
         <tr>
             <td style="padding: 10px; border-bottom: 1px solid #ddd;">${p.nombre}</td>
@@ -14,7 +11,6 @@ export const enviarFacturaBrevo = async (datos) => {
     `).join('');
 
     const emailData = {
-        // IMPORTANTE: Este email DEBE ser el que verificaste en Brevo (Senders & IP)
         sender: { name: "Comercializadora Doble L", email: "20241062@uthh.edu.mx" }, 
         to: [{ email: datos.correoProveedor, name: datos.nombreProveedor }],
         subject: `Orden de Compra - Comercializadora Doble L`,

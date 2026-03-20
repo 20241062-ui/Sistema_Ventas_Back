@@ -14,15 +14,11 @@ export const login = async (req, res) => {
             return res.status(404).json({ message: 'No se encontró ningún usuario con ese correo.' });
         }
 
-        // --- CORRECCIÓN 1: COMPROBACIÓN DE CONTRASEÑA ---
-        // Si tus contraseñas en la BD NO están encriptadas con bcrypt, cambia esto:
         let passwordCorrecta = false;
         
         if (usuario.vchpassword.startsWith('$2')) {
-            // Si la contraseña en BD empieza con $2, es bcrypt
             passwordCorrecta = await bcrypt.compare(password, usuario.vchpassword);
         } else {
-            // Si no, es texto plano (compara directamente)
             passwordCorrecta = (password === usuario.vchpassword);
         }
 
@@ -30,8 +26,6 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: 'Contraseña Inválida.' });
         }
 
-        // --- CORRECCIÓN 2: PROPIEDADES DEL TOKEN ---
-        // Asegúrate de que los nombres coincidan con el modelo (ej: intid_Usuario o id_usuario)
         const token = jwt.sign(
             { 
                 id: usuario.intid_Usuario || usuario.id_usuario, 

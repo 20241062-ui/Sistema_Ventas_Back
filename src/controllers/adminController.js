@@ -1,4 +1,3 @@
-// IMPORTANTE: Ya NO importamos 'db', solo el Modelo
 import Producto from '../models/productoModel.js';
 
 export const obtenerDashboardProductos = async (req, res) => {
@@ -8,13 +7,10 @@ export const obtenerDashboardProductos = async (req, res) => {
     const offset = (pagina - 1) * limite;
 
     try {
-        // 1. Pedimos las estadísticas al modelo
         const counts = await Producto.obtenerEstadisticas();
 
-        // 2. Pedimos los datos del dashboard (Procedimientos) al modelo
         const { totalItems, listaProductos } = await Producto.obtenerDashboard(busqueda, offset, limite);
 
-        // 3. Respondemos con el formato que espera el Frontend
         res.json({
             counts: counts,
             productos: listaProductos,
@@ -35,7 +31,6 @@ export const cambiarEstadoProducto = async (req, res) => {
     const { estado } = req.body; 
 
     try {
-        // Le ordenamos al modelo cambiar el estado
         await Producto.cambiarEstado(id, estado);
         res.json({ message: "Estado actualizado correctamente" });
     } catch (error) {
