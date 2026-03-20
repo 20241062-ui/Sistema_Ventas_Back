@@ -115,7 +115,7 @@ export const crearCompra = async (datos) => {
 
 export const obtenerProveedoresParaSelect = async () => {
     const [rows] = await db.query(
-        "SELECT vchRFC, vchNombre, vchRazon_Social FROM tblproveedor ORDER BY vchNombre ASC"
+        "SELECT vchRFC, vchNombre, vchRazon_Social, vchCorreo FROM tblproveedor ORDER BY vchNombre ASC"
     );
     return rows;
 };
