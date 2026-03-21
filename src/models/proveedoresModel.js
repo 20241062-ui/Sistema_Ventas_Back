@@ -1,4 +1,4 @@
-import { db } from "../config/BD.js";
+import db from '../config/BD.js';
 
 export const proveedoresModel = {
     obtenerTodos: async (busqueda = "") => {
