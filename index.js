@@ -13,6 +13,7 @@ import comprasRoutes from './src/routes/comprasRoutes.js';
 import productoRoutes from './src/routes/productoRoutes.js';
 import proveedoresRoutes from './src/routes/proveedoresRoutes.js';
 import sucursalRoutes from './src/routes/sucursalRoutes.js';
+import informacionRoutes from './src/routes/informacionRoutes.js';
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use('/api/ventas', ventaRoutes);
 app.use('/api/productos', productoRoutes);
 app.use('/api/proveedores', proveedoresRoutes);
 app.use('/api/sucursales', sucursalRoutes);
+app.use('/api/informacion', informacionRoutes);
 
 app.get('/api/prueba-db', async (req, res) => {
     try {
