@@ -15,6 +15,7 @@ import proveedoresRoutes from './src/routes/proveedoresRoutes.js';
 import sucursalRoutes from './src/routes/sucursalRoutes.js';
 import informacionRoutes from './src/routes/informacionRoutes.js';
 import clienteRoutes from './src/routes/clienteRoutes.js';
+import faqRoutes from './src/routes/faqRoutes.js';
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/proveedores', proveedoresRoutes);
 app.use('/api/sucursales', sucursalRoutes);
 app.use('/api/informacion', informacionRoutes);
 app.use('/api/clientes', clienteRoutes);
+app.use('/api/faq', faqRoutes);
 
 
 app.get('/api/prueba-db', async (req, res) => {
