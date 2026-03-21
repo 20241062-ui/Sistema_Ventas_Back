@@ -2,10 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
-// Carga de variables de entorno al inicio
 dotenv.config();
 
-// Importación de configuración de DB y Rutas
 import db from './src/config/BD.js';
 import authRoutes from './src/routes/authRoutes.js';
 import publicRoutes from './src/routes/publicRoutes.js';
@@ -14,12 +12,12 @@ import ventaRoutes from './src/routes/ventaRoutes.js';
 import comprasRoutes from './src/routes/comprasRoutes.js';
 import productoRoutes from './src/routes/productoRoutes.js';
 import proveedoresRoutes from './src/routes/proveedoresRoutes.js';
+import sucursalRoutes from './src/routes/sucursalRoutes.js';
 
 const app = express();
 
-// 1. JERARQUÍA DE SEGURIDAD (CORS)
 const corsOptions = {
-    origin: ['https://20241062-ui.github.io', 'http://localhost:3000'], // Añadido localhost para tus pruebas locales
+    origin: ['https://20241062-ui.github.io', 'http://localhost:3000'], 
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -41,6 +39,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/ventas', ventaRoutes);
 app.use('/api/productos', productoRoutes);
 app.use('/api/proveedores', proveedoresRoutes);
+app.use('/api/sucursales', sucursalRoutes);
 
 app.get('/api/prueba-db', async (req, res) => {
     try {

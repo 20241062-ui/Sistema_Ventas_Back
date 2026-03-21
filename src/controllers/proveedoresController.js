@@ -23,7 +23,6 @@ export const getProveedorByRFC = async (req, res) => {
 export const guardarProveedor = async (req, res) => {
     try {
         const { vchRFC } = req.body;
-        // Verificar si ya existe para decidir si es UPDATE o INSERT
         const existe = await proveedoresModel.obtenerPorRFC(vchRFC);
         
         if (existe) {
