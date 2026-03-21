@@ -1,9 +1,8 @@
-import { db } from "../config/db.js";
+import { db } from "../config/BD.js";
 
 export const proveedoresModel = {
-    // Listar todos los activos (Ordenados por nombre)
     obtenerTodos: async (busqueda = "") => {
-        let sql = "SELECT * FROM tblproveedor WHERE intEstado = 1"; // Ajusta 'intEstado' según tu BD
+        let sql = "SELECT * FROM tblproveedor WHERE intEstado = 1"; 
         let params = [];
 
         if (busqueda) {
@@ -39,7 +38,6 @@ export const proveedoresModel = {
     },
 
     eliminarLogico: async (rfc) => {
-        // En lugar de DELETE, hacemos UPDATE del estado
         return await db.query("UPDATE tblproveedor SET intEstado = 0 WHERE vchRFC = ?", [rfc]);
     }
 };
