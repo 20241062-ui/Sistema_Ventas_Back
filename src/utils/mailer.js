@@ -101,11 +101,11 @@ export const enviarFacturaBrevo = async (datos) => {
 
         const result = await response.json();
         if (response.ok) {
-            console.log("✅ ¡Correo Profesional Enviado!");
+            console.log(" ¡Correo Profesional Enviado!");
         } else {
-            console.error("❌ Error en formato:", result);
+            console.error(" Error en formato:", result);
         }
     } catch (error) {
-        console.error("❌ Error de red:", error);
+        console.error(" Error de red:", error);
     }
 };
