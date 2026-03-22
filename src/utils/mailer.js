@@ -17,7 +17,7 @@ export const enviarFacturaBrevo = async (datos) => {
     const emailData = {
         sender: { 
             name: "Comercializadora Doble L", 
-            email: "20241062@uthh.edu.mx" 
+            email: "monkyryvers890@gmail.com" 
         },
         to: [{ 
             email: datos.correoProveedor, 
