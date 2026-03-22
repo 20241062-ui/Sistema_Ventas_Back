@@ -17,6 +17,7 @@ import informacionRoutes from './src/routes/informacionRoutes.js';
 import clienteRoutes from './src/routes/clienteRoutes.js';
 import faqRoutes from './src/routes/faqRoutes.js';
 import contactoRoutes from './src/routes/contactoRoutes.js';
+import usuarioRoutes from './src/routes/adminusuarioRoutes.js';
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use('/api/informacion', informacionRoutes);
 app.use('/api/clientes', clienteRoutes);
 app.use('/api/faq', faqRoutes);
 app.use('/api/contacto', contactoRoutes);
+app.use('/api/usuarios', usuarioRoutes);
 
 
 app.get('/api/prueba-db', async (req, res) => {
