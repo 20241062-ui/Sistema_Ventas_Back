@@ -25,7 +25,6 @@ export const obtenerDashboardProductos = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("ERROR CRÍTICO:", error);
         res.status(500).json({ 
             mensaje: "Error en el servidor", 
             sqlError: error.message,
@@ -95,7 +94,7 @@ export const eliminarProducto = async (req, res) => {
         
         res.json({ 
             status: 'success', 
-            message: 'Producto dado de baja correctamente (Estado inactivo)' 
+            message: 'Producto dado de baja correctamente' 
         });
     } catch (error) {
         res.status(500).json({ mensaje: "Error al procesar la baja" });

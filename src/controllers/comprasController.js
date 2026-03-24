@@ -37,7 +37,6 @@ export const registrarCompra = async (req, res) => {
     try {
         const { rfc, total, productos, correoProveedor, nombreProveedor } = req.body;
 
-        // 1. Validaciones básicas
         if (!productos || productos.length === 0) {
             return res.status(400).json({ mensaje: "La compra debe tener al menos un producto" });
         }
@@ -46,15 +45,10 @@ export const registrarCompra = async (req, res) => {
             return res.status(400).json({ mensaje: "Falta el correo del proveedor para enviar la notificación" });
         }
 
-        // 2. Guardar en la base de datos
         const resultado = await comprasModel.crearCompra({ rfc, total, productos });
         
-        // 3. Envío de correo con Brevo
-        // Usamos un bloque try-catch interno para que, si el correo falla, 
-        // no se cancele la respuesta de "Compra exitosa" al usuario.
         if (resultado && resultado.id_Compra) {
             try {
-                // CAMBIO CRÍTICO: Agregamos await para asegurar que el proceso no se corte en Vercel
                 await enviarFacturaBrevo({
                     rfc,
                     total,
@@ -64,13 +58,10 @@ export const registrarCompra = async (req, res) => {
                 });
                 console.log(`Factura enviada correctamente a: ${correoProveedor}`);
             } catch (mailError) {
-                // Solo registramos el error en consola para no asustar al cliente, 
-                // ya que la compra sí se guardó en la DB.
                 console.error("Fallo el envío de correo a Brevo:", mailError.message);
             }
         }
 
-        // 4. Respuesta al cliente
         res.status(201).json({ 
             mensaje: "Compra registrada con éxito y notificación enviada.", 
             id: resultado.id_Compra 

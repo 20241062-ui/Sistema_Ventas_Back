@@ -45,8 +45,8 @@ export const eliminarMarca = async (req, res) => {
     try {
         const { id } = req.params;
         await Marca.eliminarLogico(id);
-        res.json({ status: "success", mensaje: "Marca eliminada correctamente (Baja lógica)" });
+        res.json({ status: "success", mensaje: "Marca dada de baja del sistema" });
     } catch (error) {
-        res.status(500).json({ mensaje: "Error al eliminar la marca" });
+        res.status(500).json({ mensaje: "Error al dar de baja la marca" });
     }
 };

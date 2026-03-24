@@ -18,6 +18,7 @@ import clienteRoutes from './src/routes/clienteRoutes.js';
 import faqRoutes from './src/routes/faqRoutes.js';
 import contactoRoutes from './src/routes/contactoRoutes.js';
 import usuarioRoutes from './src/routes/adminusuarioRoutes.js';
+import analisisRoutes from './src/routes/analisisRoutes.js';
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use('/api/clientes', clienteRoutes);
 app.use('/api/faq', faqRoutes);
 app.use('/api/contacto', contactoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/analisis', analisisRoutes);
 
 
 app.get('/api/prueba-db', async (req, res) => {

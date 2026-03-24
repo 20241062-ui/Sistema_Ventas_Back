@@ -40,7 +40,7 @@ export const guardarProveedor = async (req, res) => {
 export const eliminarProveedor = async (req, res) => {
     try {
         await proveedoresModel.eliminarLogico(req.params.rfc);
-        res.json({ mensaje: "Proveedor eliminado (lógicamente)" });
+        res.json({ mensaje: "Proveedor dado de baja del sistema" });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
