@@ -13,7 +13,7 @@ const Producto = {
         };
     },
 
-    obtenerTodos: async (buscar, offset, limite, esAdmin = false) => {
+    obtenerTodos: async (buscar, offset, limite, esAdmin = false, categoriaId = null) => {
         let productos;
         let totalFiltrados;
 
@@ -24,24 +24,35 @@ const Producto = {
             productos = resultProd[0]; 
             totalFiltrados = resultTotal[0][0]?.total || 0;
         } else {
-            const sqlPublico = `
+            let sqlPublico = `
                 SELECT p.*, m.vchNombre AS Marca, c.vchNombre AS Categoria
                 FROM tblproductos p
                 LEFT JOIN tblmarcas m ON p.intid_Marca = m.intid_Marca
                 LEFT JOIN tblcategoria c ON p.intid_Categoria = c.intid_Categoria
                 WHERE p.Estado = 1 
-                AND (p.vchNombre LIKE CONCAT('%', ?, '%') OR p.vchNo_Serie LIKE CONCAT('%', ?, '%'))
-                ORDER BY p.vchNombre ASC
-                LIMIT ? OFFSET ?`;
+                AND (p.vchNombre LIKE CONCAT('%', ?, '%') OR p.vchNo_Serie LIKE CONCAT('%', ?, '%'))`;
             
-            const sqlTotalPublico = `
+            let sqlTotalPublico = `
                 SELECT COUNT(*) AS total 
                 FROM tblproductos 
                 WHERE Estado = 1 
                 AND (vchNombre LIKE CONCAT('%', ?, '%') OR vchNo_Serie LIKE CONCAT('%', ?, '%'))`;
 
-            const [rows] = await db.query(sqlPublico, [buscar, buscar, limite, offset]);
-            const [totalRows] = await db.query(sqlTotalPublico, [buscar, buscar]);
+            const params = [buscar, buscar];
+            const paramsTotal = [buscar, buscar];
+
+            if (categoriaId && categoriaId !== 'todas') {
+                sqlPublico += ` AND p.intid_Categoria = ?`;
+                sqlTotalPublico += ` AND intid_Categoria = ?`;
+                params.push(categoriaId);
+                paramsTotal.push(categoriaId);
+            }
+
+            sqlPublico += ` ORDER BY p.vchNombre ASC LIMIT ? OFFSET ?`;
+            params.push(limite, offset);
+
+            const [rows] = await db.query(sqlPublico, params);
+            const [totalRows] = await db.query(sqlTotalPublico, paramsTotal);
             
             productos = rows;
             totalFiltrados = totalRows[0]?.total || 0;

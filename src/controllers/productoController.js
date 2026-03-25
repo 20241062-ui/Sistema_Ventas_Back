@@ -4,10 +4,11 @@ export const obtenerDashboardProductos = async (req, res) => {
     try {
         const buscar = req.query.buscar || "";
         const pagina = parseInt(req.query.pagina) || 1;
+        const categoria = req.query.categoria || "todas";
         const limite = 12; 
         const offset = (pagina - 1) * limite;
 
-        const result = await Producto.obtenerTodos(buscar, offset, limite, false);
+        const result = await Producto.obtenerTodos(buscar, offset, limite, false, categoria);
 
         let productoDestacado = null;
         if (result.productos && result.productos.length > 0) {
@@ -21,14 +22,14 @@ export const obtenerDashboardProductos = async (req, res) => {
             counts: result.stats,
             pagination: {
                 totalPages: Math.ceil(result.totalFiltrados / limite) || 1, 
-                currentPage: pagina
+                currentPage: pagina,
+                totalItems: result.totalFiltrados
             }
         });
     } catch (error) {
         res.status(500).json({ 
             mensaje: "Error en el servidor", 
-            sqlError: error.message,
-            pila: error.stack 
+            sqlError: error.message
         });
     }
 };
