@@ -25,7 +25,7 @@ const Producto = {
 
             productos = await Promise.all(productosBase.map(async (p) => {
                 const [ventas] = await db.query(
-                    'SELECT COUNT(*) as totalVentas FROM tbldetalleventa WHERE vchNo_Serie = ?', 
+                    'SELECT COUNT(*) as totalVentas FROM tbldetalleventa WHERE No_Serie = ?', 
                     [p.vchNo_Serie]
                 );
                 return {
