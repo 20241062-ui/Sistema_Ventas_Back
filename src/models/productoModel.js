@@ -21,8 +21,21 @@ const Producto = {
             const [resultProd] = await db.query('CALL sp_obtener_productos(?, ?, ?)', [buscar, offset, limite]);
             const [resultTotal] = await db.query('CALL sp_contar_productos(?)', [buscar]);
             
-            productos = resultProd[0]; 
+            let productosBase = resultProd[0]; 
+
+            productos = await Promise.all(productosBase.map(async (p) => {
+                const [ventas] = await db.query(
+                    'SELECT COUNT(*) as totalVentas FROM tbldetalleventa WHERE vchNo_Serie = ?', 
+                    [p.vchNo_Serie]
+                );
+                return {
+                    ...p,
+                    tieneVentas: ventas[0].totalVentas > 0 
+                };
+            }));
+
             totalFiltrados = resultTotal[0][0]?.total || 0;
+
         } else {
             let sqlPublico = `
                 SELECT p.*, m.vchNombre AS Marca, c.vchNombre AS Categoria
