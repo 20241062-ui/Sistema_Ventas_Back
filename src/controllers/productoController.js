@@ -5,10 +5,10 @@ export const obtenerDashboardProductos = async (req, res) => {
         const buscar = req.query.buscar || "";
         const pagina = parseInt(req.query.pagina) || 1;
         const categoria = req.query.categoria || "todas";
-        const limite = 12; 
+        const limite = 9; 
         const offset = (pagina - 1) * limite;
 
-        const result = await Producto.obtenerTodos(buscar, offset, limite, false, categoria);
+        const result = await Producto.obtenerTodos(buscar, offset, limite, true, categoria);
 
         let productoDestacado = null;
         if (result.productos && result.productos.length > 0) {
