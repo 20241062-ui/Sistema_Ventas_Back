@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
-import { getSimulacionStock } from '../controllers/analisisController.js';
+import { getSimulacionDinamica } from '../controllers/analisisController.js';
 
-router.get('/simulacion', getSimulacionStock);
+router.get('/simulacion', getSimulacionDinamica);
 
 export default router;
