@@ -10,7 +10,7 @@ export const analisisModel = {
                 p.intStock as stock_actual,
                 SUM(dv.intCantidad) as unidades_vendidas
             FROM tblproductos p
-            INNER JOIN tbldetalleventa dv ON p.vchNo_Serie = dv.vchNo_Serie
+            INNER JOIN tbldetalleventa dv ON p.vchNo_Serie = dv.No_Serie
             WHERE p.Estado = 1
             GROUP BY p.vchNo_Serie
             HAVING unidades_vendidas > 0`;
@@ -27,8 +27,8 @@ export const analisisModel = {
                 (p.intStock + SUM(dv.intCantidad)) as stock_inicial_estimado,
                 DATEDIFF(MAX(v.fecFecha), MIN(v.fecFecha)) as dias_venta
             FROM tblproductos p
-            INNER JOIN tbldetalleventa dv ON p.vchNo_Serie = dv.vchNo_Serie
-            INNER JOIN tblventas v ON dv.intId_Venta = v.intId_Venta
+            INNER JOIN tbldetalleventa dv ON p.vchNo_Serie = dv.No_Serie
+            INNER JOIN tblventas v ON dv.id_venta = v.id_Ventas
             WHERE p.vchNo_Serie = ?
             GROUP BY p.vchNo_Serie`;
         const [rows] = await db.query(sql, [noSerie]);
