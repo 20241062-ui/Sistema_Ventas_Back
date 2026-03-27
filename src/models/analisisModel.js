@@ -8,7 +8,7 @@ export const analisisModel = {
                 p.vchNo_Serie, 
                 p.vchNombre, 
                 p.intStock as stock_actual,
-                SUM(dv.intCantidad) as unidades_vendidas
+                SUM(dv.Cantidad) as unidades_vendidas
             FROM tblproductos p
             INNER JOIN tbldetalleventa dv ON p.vchNo_Serie = dv.No_Serie
             WHERE p.Estado = 1
@@ -24,7 +24,7 @@ export const analisisModel = {
             SELECT 
                 p.vchNombre,
                 p.intStock as stock_actual,
-                (p.intStock + SUM(dv.intCantidad)) as stock_inicial_estimado,
+                (p.intStock + SUM(dv.Cantidad)) as stock_inicial_estimado,
                 DATEDIFF(MAX(v.fecFecha), MIN(v.fecFecha)) as dias_venta
             FROM tblproductos p
             INNER JOIN tbldetalleventa dv ON p.vchNo_Serie = dv.No_Serie
