@@ -14,15 +14,18 @@ const Producto = {
     },
 
     obtenerTodos: async (buscar, offset, limite, esAdmin = false, categoriaId = null) => {
-        let productos;
+        let productos; // Variable principal que retornaremos
         let totalFiltrados;
 
         if (esAdmin) {
+            // 1. Obtener productos base del Store Procedure
             const [resultProd] = await db.query('CALL sp_obtener_productos(?, ?, ?)', [buscar, offset, limite]);
             const [resultTotal] = await db.query('CALL sp_contar_productos(?)', [buscar]);
             
-            let productosBase = resultProd[0]; 
+            const productosBase = resultProd[0]; 
 
+            // 2. Mapeo dinámico para verificar ventas (CORRECCIÓN CLAVE AQUÍ)
+            // Asignamos el resultado directamente a la variable 'productos'
             productos = await Promise.all(productosBase.map(async (p) => {
                 const [ventas] = await db.query(
                     'SELECT COUNT(*) as totalVentas FROM tbldetalleventa WHERE No_Serie = ?', 
@@ -37,6 +40,7 @@ const Producto = {
             totalFiltrados = resultTotal[0][0]?.total || 0;
 
         } else {
+            // Lógica para el Home (Público)
             let sqlPublico = `
                 SELECT p.*, m.vchNombre AS Marca, c.vchNombre AS Categoria
                 FROM tblproductos p
@@ -67,12 +71,14 @@ const Producto = {
             const [rows] = await db.query(sqlPublico, params);
             const [totalRows] = await db.query(sqlTotalPublico, paramsTotal);
             
-            productos = rows;
+            productos = rows; // Asignamos los productos públicos
             totalFiltrados = totalRows[0]?.total || 0;
         }
         
+        // Obtener estadísticas globales
         const stats = await Producto.obtenerEstadisticas();
 
+        // 3. Retornar el objeto con la variable 'productos' correctamente llena
         return {
             productos,
             totalFiltrados,
