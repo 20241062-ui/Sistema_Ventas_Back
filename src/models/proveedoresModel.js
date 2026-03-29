@@ -2,7 +2,8 @@ import db from '../config/BD.js';
 
 export const proveedoresModel = {
     obtenerTodos: async (busqueda = "") => {
-        let sql = "SELECT * FROM tblproveedor"; 
+        
+        let sql = "SELECT * FROM tblproveedor WHERE intEstado = 1"; 
         let params = [];
 
         if (busqueda) {
