@@ -6,9 +6,10 @@ export const clienteModel = {
         let params = [];
 
         if (busqueda) {
-            sql += " WHERE vchNombre LIKE ? OR vchApellido_Paterno LIKE ? OR vchCorreo LIKE ?";
+            // Añadimos paréntesis para agrupar las condiciones del OR
+            sql += " WHERE (vchNombre LIKE ? OR vchApellido_Paterno LIKE ? OR vchApellido_Materno LIKE ? OR vchCorreo LIKE ?)";
             const filtro = `%${busqueda}%`;
-            params = [filtro, filtro, filtro];
+            params = [filtro, filtro, filtro, filtro];
         }
 
         sql += " ORDER BY intid_Cliente ASC";
