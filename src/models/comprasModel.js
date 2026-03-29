@@ -1,12 +1,16 @@
 import db from "../config/BD.js";
 
-
-export const obtenerCompras = async () => {
+export const obtenerCompras = async (busqueda = "") => {
+    const filtro = `%${busqueda}%`;
+    
     const [rows] = await db.query(`
         SELECT id_Compra, RFC, TotalCompra, Fecha
         FROM tblcompra
+        WHERE CAST(id_Compra AS CHAR) LIKE ? 
+           OR RFC LIKE ?
         ORDER BY id_Compra DESC
-    `);
+    `, [filtro, filtro]);
+    
     return rows;
 };
 

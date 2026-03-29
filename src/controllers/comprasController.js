@@ -3,7 +3,10 @@ import { enviarFacturaBrevo } from "../utils/mailer.js";
 
 export const listarCompras = async (req, res) => {
     try {
-        const compras = await comprasModel.obtenerCompras();
+       
+        const { buscar } = req.query; 
+        const compras = await comprasModel.obtenerCompras(buscar || "");
+        
         res.json({
             total: compras.length,
             compras: compras
