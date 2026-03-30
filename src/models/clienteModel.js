@@ -40,4 +40,12 @@ export const clienteModel = {
         );
         return rows[0]; 
     },
+    crear: async (datos) => {
+        const { vchNombre, vchApellido_Paterno, vchApellido_Materno, vchCorreo, vchpassword } = datos;
+        const sql = `INSERT INTO tblcliente 
+            (vchNombre, vchApellido_Paterno, vchApellido_Materno, vchCorreo, vchpassword, Estado) 
+            VALUES (?, ?, ?, ?, ?, 1)`;
+        const [result] = await db.query(sql, [vchNombre, vchApellido_Paterno, vchApellido_Materno, vchCorreo, vchpassword]);
+        return result;
+    }
 };
