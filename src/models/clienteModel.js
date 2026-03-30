@@ -32,5 +32,14 @@ export const clienteModel = {
 
     cambiarEstado: async (id, estado) => {
         return await db.query("UPDATE tblcliente SET Estado = ? WHERE intid_Cliente = ?", [estado, id]);
-    }
+    },
+
+    buscarPorCorreo: async (correo) => {
+        // IMPORTANTE: Asegúrate de que el nombre de la columna sea vchpassword o vchPassword según tu DB
+        const [rows] = await db.query(
+            'SELECT intid_Cliente, vchNombre, vchpassword, Estado FROM tblcliente WHERE vchCorreo = ?', 
+            [correo]
+        );
+        return rows[0]; 
+    },
 };
