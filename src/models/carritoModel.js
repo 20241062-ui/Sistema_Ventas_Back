@@ -13,7 +13,7 @@ export const carritoModel = {
 
     obtenerPorCliente: async (id_Cliente) => {
         const sql = `
-            SELECT c.*, p.vchNombre, p.floPrecioUnitario, p.vchImagen 
+            SELECT c.intid_Carrito, c.intCantidad, p.vchNombre, p.floPrecioUnitario, p.vchImagen 
             FROM tblcarrito c
             JOIN tblproductos p ON c.vchNo_Serie = p.vchNo_Serie
             WHERE c.id_Cliente = ?`;
