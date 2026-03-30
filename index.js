@@ -19,7 +19,6 @@ import faqRoutes from './src/routes/faqRoutes.js';
 import contactoRoutes from './src/routes/contactoRoutes.js';
 import usuarioRoutes from './src/routes/adminusuarioRoutes.js';
 import analisisRoutes from './src/routes/analisisRoutes.js';
-import carritoRoutes from './src/routes/carritoRoutes.js';
 
 const app = express();
 
@@ -53,7 +52,7 @@ app.use('/api/faq', faqRoutes);
 app.use('/api/contacto', contactoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/analisis', analisisRoutes);
-app.use('/api/carrito', carritoRoutes);
+
 
 app.get('/api/prueba-db', async (req, res) => {
     try {
