@@ -6,7 +6,6 @@ export const clienteModel = {
         let params = [];
 
         if (busqueda) {
-            // Añadimos paréntesis para agrupar las condiciones del OR
             sql += " WHERE (vchNombre LIKE ? OR vchApellido_Paterno LIKE ? OR vchApellido_Materno LIKE ? OR vchCorreo LIKE ?)";
             const filtro = `%${busqueda}%`;
             params = [filtro, filtro, filtro, filtro];
@@ -35,7 +34,6 @@ export const clienteModel = {
     },
 
     buscarPorCorreo: async (correo) => {
-        // IMPORTANTE: Asegúrate de que el nombre de la columna sea vchpassword o vchPassword según tu DB
         const [rows] = await db.query(
             'SELECT intid_Cliente, vchNombre, vchpassword, Estado FROM tblcliente WHERE vchCorreo = ?', 
             [correo]
