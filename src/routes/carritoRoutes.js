@@ -4,7 +4,6 @@ import { verificarToken } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-// TODAS las rutas de carrito SÍ requieren token
 router.use(verificarToken);
 
 router.get('/', obtenerCarrito);
