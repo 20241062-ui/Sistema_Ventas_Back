@@ -2,7 +2,11 @@ import Carrito from '../models/carritoModel.js';
 
 export const obtenerCarrito = async (req, res) => {
     try {
-        const id_cliente = req.user.id; // Extraído del middleware de autenticación
+        
+        const id_cliente = req.user.id || req.user.intid_Cliente; 
+        
+        if (!id_cliente) return res.status(401).json({ mensaje: "Usuario no identificado" });
+
         const items = await Carrito.obtenerPorUsuario(id_cliente);
         res.json(items);
     } catch (error) {
@@ -27,8 +31,7 @@ export const agregarAlCarrito = async (req, res) => {
 export const eliminarDelCarrito = async (req, res) => {
     try {
         const id_cliente = req.user.id;
-        const { id } = req.params; // ID del registro en el carrito
-
+        const { id } = req.params; 
         await Carrito.eliminar(id, id_cliente);
         res.json({ status: 'success', mensaje: "Producto eliminado" });
     } catch (error) {
