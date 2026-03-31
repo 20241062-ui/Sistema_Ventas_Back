@@ -32,11 +32,11 @@ export const agregarAlCarrito = async (req, res) => {
 
 export const eliminarDelCarrito = async (req, res) => {
     try {
-        const id_cliente = req.user.id;
+        const id_cliente = req.user.id || req.user.intid_Cliente; 
         const { id } = req.params; 
         await Carrito.eliminar(id, id_cliente);
         res.json({ status: 'success', mensaje: "Producto eliminado" });
     } catch (error) {
-        res.status(500).json({ mensaje: "Error al eliminar del carrito", error: error.message });
+        res.status(500).json({ mensaje: "Error al eliminar", error: error.message });
     }
 };
