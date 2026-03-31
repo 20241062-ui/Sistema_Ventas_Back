@@ -1,6 +1,6 @@
 import express from 'express';
 import { obtenerCarrito, agregarAlCarrito, eliminarDelCarrito } from '../controllers/carritoController.js';
-import { verificarToken } from '../middleware/authMiddleware.js';
+import { verificarToken } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
