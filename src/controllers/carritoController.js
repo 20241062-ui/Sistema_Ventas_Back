@@ -14,11 +14,13 @@ export const obtenerCarrito = async (req, res) => {
     }
 };
 
+
 export const agregarAlCarrito = async (req, res) => {
     try {
-        const id_cliente = req.user.id;
+        const id_cliente = req.user.id || req.user.intid_Cliente; 
         const { vchNo_Serie, intCantidad } = req.body;
 
+        if (!id_cliente) return res.status(401).json({ mensaje: "Usuario no identificado" });
         if (!vchNo_Serie) return res.status(400).json({ mensaje: "ID de producto requerido" });
 
         await Carrito.agregar(id_cliente, vchNo_Serie, intCantidad || 1);
