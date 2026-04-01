@@ -5,10 +5,12 @@ export const obtenerDashboardProductos = async (req, res) => {
         const buscar = req.query.buscar || "";
         const pagina = parseInt(req.query.pagina) || 1;
         const categoria = req.query.categoria || "todas";
-        const limite = 9; 
+        const limite = parseInt(req.query.limite) || 9; 
         const offset = (pagina - 1) * limite;
+        
+        const esAdmin = req.user && req.user.rol === 'Administrador';
 
-        const result = await Producto.obtenerTodos(buscar, offset, limite, true, categoria);
+        const result = await Producto.obtenerTodos(buscar, offset, limite, esAdmin, categoria);
 
         let productoDestacado = null;
         if (result.productos && result.productos.length > 0) {
@@ -19,7 +21,7 @@ export const obtenerDashboardProductos = async (req, res) => {
         res.json({
             hero: productoDestacado, 
             productos: result.productos, 
-            counts: result.stats,
+            stats: result.stats,
             pagination: {
                 totalPages: Math.ceil(result.totalFiltrados / limite) || 1, 
                 currentPage: pagina,
@@ -27,6 +29,7 @@ export const obtenerDashboardProductos = async (req, res) => {
             }
         });
     } catch (error) {
+        console.error("Error en obtenerDashboardProductos:", error);
         res.status(500).json({ 
             mensaje: "Error en el servidor", 
             sqlError: error.message
