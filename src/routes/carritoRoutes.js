@@ -1,10 +1,10 @@
 import express from 'express';
 import { obtenerCarrito, agregarAlCarrito, eliminarDelCarrito } from '../controllers/carritoController.js';
-import { verificarToken } from '../middlewares/authMiddleware.js';
+import { verificarAdmin } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.use(verificarToken);
+router.use(verificarAdmin);
 
 router.get('/', obtenerCarrito);
 router.post('/agregar', agregarAlCarrito);
