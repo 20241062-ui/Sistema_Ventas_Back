@@ -2,14 +2,16 @@ import Carrito from '../models/carritoModel.js';
 
 export const obtenerCarrito = async (req, res) => {
     try {
-        // Verifica cómo se llama la propiedad en tu authMiddleware (id o intid_Cliente)
-        const id_cliente = req.user.id || req.user.intid_Cliente; 
-        if (!id_cliente) return res.status(401).json({ mensaje: "No autorizado" });
+        const id_cliente = req.user.intid_Cliente || req.user.id; 
+        
+        if (!id_cliente) {
+            return res.status(401).json({ mensaje: "Usuario no identificado" });
+        }
 
         const items = await Carrito.obtenerPorUsuario(id_cliente);
         res.json(items);
     } catch (error) {
-        res.status(500).json({ mensaje: "Error", error: error.message });
+        res.status(500).json({ mensaje: "Error al obtener carrito", error: error.message });
     }
 };
 
