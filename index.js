@@ -57,19 +57,4 @@ app.use('/api/analisis', analisisRoutes);
 app.use('/api/carrito', carritoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 
-app.get('/api/prueba-db', async (req, res) => {
-    try {
-        const [rows] = await db.query('SELECT 1 + 1 AS resultado');
-        res.json({ 
-            estado: "Conexión Exitosa", 
-            db: rows[0].resultado === 2 ? "Base de datos respondiendo" : "Error inesperado" 
-        });
-    } catch (error) {
-        res.status(500).json({ 
-            estado: "Error de Conexión", 
-            detalle: error.message 
-        });
-    }
-});
-
 export default app;
