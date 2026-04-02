@@ -29,7 +29,7 @@ export const obtenerCompraPorId = async (id) => {
                 d.No_Serie AS No_Serie,
                 p.vchNombre AS producto,
                 d.Cantidad AS Cantidad,
-                d.floPrecioCompra AS PrecioCompra,
+                d.PrecioCompra AS PrecioCompra,
                 (d.intCantidad * d.floPrecioCompra) AS subtotal
             FROM tbldetallecompra d
             INNER JOIN tblproductos p ON d.No_Serie = p.vchNo_Serie
