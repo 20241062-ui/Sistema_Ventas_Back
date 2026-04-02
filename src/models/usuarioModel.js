@@ -1,25 +1,36 @@
 import db from '../config/BD.js';
 
 const Usuario = {
-    buscarPorCorreo: async (id) => {
-        const sql = "SELECT intid_Usuario, vchNombre, vchApellidoP, vchApellidoM, vchCorreo, intid_Rol FROM tblusuario WHERE id_Usuario = ?";
-        const [rows] = await db.query(sql, [id]);
-        return rows[0];
+    buscarPorCorreo: async (correo) => {
+        try {
+            const sql = "SELECT id_usuario, vchnombre, vchapellido, vchcorreo, vchpassword, vchRol FROM tblusuario WHERE vchcorreo = ?";
+            const [rows] = await db.query(sql, [correo]);
+            return rows[0];
+        } catch (error) {
+            console.error("Error en buscarPorCorreo:", error);
+            throw error;
+        }
     },
 
     actualizarPerfil: async (id, datos) => {
-        const { nombre, apellidoP, apellidoM, password } = datos;
+        const { nombre, apellido, password } = datos;
         let sql, params;
 
         if (password) {
             sql = "UPDATE tblusuario SET vchnombre = ?, vchapellido = ?, vchpassword = ? WHERE id_usuario = ?";
-            params = [nombre, apellidoP, apellidoM, password, id];
+            params = [nombre, apellido, password, id];
         } else {
             sql = "UPDATE tblusuario SET vchnombre = ?, vchapellido = ? WHERE id_usuario = ?";
-            params = [nombre, apellidoP, apellidoM, id];
+            params = [nombre, apellido, id];
         }
 
-        return await db.query(sql, params);
+        try {
+            const [result] = await db.query(sql, params);
+            return result;
+        } catch (error) {
+            console.error("Error en actualizarPerfil:", error);
+            throw error;
+        }
     }
 };
 
