@@ -26,13 +26,13 @@ export const obtenerCompraPorId = async (id) => {
 
         const [productos] = await db.query(`
             SELECT 
-                d.vchNo_Serie AS No_Serie,
+                d.No_Serie AS No_Serie,
                 p.vchNombre AS producto,
                 d.intCantidad AS Cantidad,
                 d.floPrecioCompra AS PrecioCompra,
                 (d.intCantidad * d.floPrecioCompra) AS subtotal
             FROM tbldetallecompra d
-            INNER JOIN tblproductos p ON d.vchNo_Serie = p.vchNo_Serie
+            INNER JOIN tblproductos p ON d.No_Serie = p.vchNo_Serie
             WHERE d.id_Compra = ?
         `, [id]);
 
