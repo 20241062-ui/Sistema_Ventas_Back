@@ -7,7 +7,7 @@ export const obtenerCompras = async (busqueda = "") => {
         SELECT id_Compra, RFC, TotalCompra, Fecha
         FROM tblcompra
         WHERE CAST(id_Compra AS CHAR) LIKE ? 
-           OR RFC LIKE ?
+            OR RFC LIKE ?
         ORDER BY id_Compra DESC
     `, [filtro, filtro]);
     
@@ -24,8 +24,6 @@ export const obtenerCompraPorId = async (id) => {
 
         if (compra.length === 0) return { compra: null, detalle: [] };
 
-        // 2. Detalle de la compra
-        // Usamos 'tbldetallecompra' (el nombre que me confirmaste)
         const [productos] = await db.query(`
             SELECT 
                 d.vchNo_Serie AS No_Serie,
@@ -100,7 +98,7 @@ export const crearCompra = async (datos) => {
 
 export const obtenerProveedoresParaSelect = async () => {
     const [rows] = await db.query(
-        "SELECT vchRFC, vchNombre, vchRazon_Social, vchCorreo FROM tblproveedor ORDER BY vchNombre ASC"
+        "SELECT vchRFC, vchNombre, vchRazon_Social, vchCorreo FROM tblproveedores ORDER BY vchNombre ASC"
     );
     return rows;
 };
