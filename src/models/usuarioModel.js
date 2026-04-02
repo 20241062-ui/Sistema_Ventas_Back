@@ -1,7 +1,7 @@
 import db from '../config/BD.js';
 
 const Usuario = {
-    obtenerPorId: async (id) => {
+    buscarPorCorreo: async (id) => {
         const sql = "SELECT intid_Usuario, vchNombre, vchApellidoP, vchApellidoM, vchCorreo, intid_Rol FROM tblusuario WHERE id_Usuario = ?";
         const [rows] = await db.query(sql, [id]);
         return rows[0];

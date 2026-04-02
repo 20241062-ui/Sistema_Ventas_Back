@@ -3,7 +3,7 @@ import { clienteModel as Cliente } from '../models/clienteModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const SECRET_KEY = process.env.JWT_SECRET || "una_clave_por_defecto_solo_para_local";
+const SECRET_KEY = process.env.JWT_SECRET;
 
 export const login = async (req, res) => {
     const { user, password } = req.body; 
