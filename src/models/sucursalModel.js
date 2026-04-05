@@ -2,7 +2,7 @@ import db from '../config/BD.js';
 
 export const sucursalModel = {
     obtenerTodas: async () => {
-        const [rows] = await db.query("SELECT * FROM tblsucursales WHERE intEstado = 1 ORDER BY vchnombre ASC");
+        const [rows] = await db.query("SELECT * FROM tblsucursales ORDER BY vchnombre ASC");
         return rows;
     },
 
