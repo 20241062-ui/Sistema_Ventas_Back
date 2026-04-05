@@ -28,12 +28,12 @@ export const login = async (req, res) => {
         }
 
         const hashAlmacenado = persona.vchpassword || persona.vchPassword;
-        let passwordCorrecta = false;
-
+        
         if (!hashAlmacenado) {
-            return res.status(500).json({ message: "Error en la estructura de datos de seguridad." });
+            return res.status(500).json({ message: "Error en la estructura de seguridad de la cuenta." });
         }
 
+        let passwordCorrecta = false;
         if (hashAlmacenado.startsWith('$2')) {
             passwordCorrecta = await bcrypt.compare(password, hashAlmacenado);
         } else {
@@ -47,20 +47,25 @@ export const login = async (req, res) => {
             });
         }
 
-        if (persona.Estado === 0 || persona.intEstado === 0) {
+        const cuentaActiva = (persona.Estado !== 0 && persona.intEstado !== 0);
+        if (!cuentaActiva) {
             return res.status(403).json({
                 status: 'error',
                 message: 'Esta cuenta se encuentra desactivada. Contacte al administrador.'
             });
         }
 
-        console.log("Datos de la persona para el token:", persona);
+        const idFinal = persona.id_usuario || persona.intid_Usuario || persona.intid_Cliente;
+        const nombreFinal = persona.vchnombre || persona.vchNombre;
+        const rolFinal = persona.vchRol || 'Usuario';
+
+        console.log(`Login exitoso: ID ${idFinal}, Nombre ${nombreFinal}`);
 
         const token = jwt.sign(
             {
-                id: persona.id_usuario || persona.intid_Usuario || persona.intid_Cliente,
-                nombre: persona.vchnombre || persona.vchNombre,
-                rol: persona.vchRol
+                id: idFinal,
+                nombre: nombreFinal,
+                rol: rolFinal
             },
             SECRET_KEY,
             { expiresIn: '24h' }
@@ -71,9 +76,9 @@ export const login = async (req, res) => {
             message: 'Inicio de sesión exitoso',
             token,
             user: {
-                id: persona.id_usuario || persona.intid_Cliente,
-                nombre: persona.vchNombre,
-                rol: persona.vchRol,
+                id: idFinal,
+                nombre: nombreFinal,
+                rol: rolFinal,
                 tipo: tipoUsuario
             }
         });
@@ -87,6 +92,7 @@ export const login = async (req, res) => {
         });
     }
 };
+
 export const registrar = async (req, res) => {
     const { nombre, paterno, materno, correo, password } = req.body;
 
