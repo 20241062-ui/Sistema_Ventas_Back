@@ -1,12 +1,12 @@
 import Usuario from '../models/usuarioModel.js';
-import { clienteModel as Cliente } from '../models/clienteModel.js'; 
+import { clienteModel as Cliente } from '../models/clienteModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const SECRET_KEY = process.env.JWT_SECRET;
 
 export const login = async (req, res) => {
-    const { user, password } = req.body; 
+    const { user, password } = req.body;
 
     try {
         let persona = await Usuario.buscarPorCorreo(user);
@@ -16,14 +16,14 @@ export const login = async (req, res) => {
             persona = await Cliente.buscarPorCorreo(user);
             if (persona) {
                 tipoUsuario = 'Cliente';
-                persona.vchRol = 'Cliente'; 
+                persona.vchRol = 'Cliente';
             }
         }
 
         if (!persona) {
-            return res.status(404).json({ 
+            return res.status(404).json({
                 status: 'error',
-                message: 'No se encontró ninguna cuenta vinculada a este correo.' 
+                message: 'No se encontró ninguna cuenta vinculada a este correo.'
             });
         }
 
@@ -41,27 +41,29 @@ export const login = async (req, res) => {
         }
 
         if (!passwordCorrecta) {
-            return res.status(401).json({ 
+            return res.status(401).json({
                 status: 'error',
-                message: 'La contraseña ingresada es incorrecta.' 
+                message: 'La contraseña ingresada es incorrecta.'
             });
         }
 
         if (persona.Estado === 0 || persona.intEstado === 0) {
-            return res.status(403).json({ 
+            return res.status(403).json({
                 status: 'error',
-                message: 'Esta cuenta se encuentra desactivada. Contacte al administrador.' 
+                message: 'Esta cuenta se encuentra desactivada. Contacte al administrador.'
             });
         }
 
+        console.log("Datos de la persona para el token:", persona);
+
         const token = jwt.sign(
-            { 
-                id: persona.id_usuario || persona.intid_Cliente, 
-                nombre: persona.vchNombre, 
-                rol: persona.vchRol 
+            {
+                id: persona.id_usuario || persona.intid_Usuario || persona.intid_Cliente,
+                nombre: persona.vchnombre || persona.vchNombre,
+                rol: persona.vchRol
             },
             SECRET_KEY,
-            { expiresIn: '24h' } 
+            { expiresIn: '24h' }
         );
 
         res.json({
@@ -78,10 +80,10 @@ export const login = async (req, res) => {
 
     } catch (error) {
         console.error("Error crítico en el proceso de login:", error);
-        res.status(500).json({ 
+        res.status(500).json({
             status: 'error',
-            message: "Error interno del servidor", 
-            error: error.message 
+            message: "Error interno del servidor",
+            error: error.message
         });
     }
 };
