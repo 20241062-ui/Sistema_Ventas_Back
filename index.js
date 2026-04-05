@@ -17,14 +17,15 @@ import informacionRoutes from './src/routes/informacionRoutes.js';
 import clienteRoutes from './src/routes/clienteRoutes.js';
 import faqRoutes from './src/routes/faqRoutes.js';
 import contactoRoutes from './src/routes/contactoRoutes.js';
-import usuarioRoutes from './src/routes/adminusuarioRoutes.js';
+import adminGestionRoutes from './src/routes/adminusuarioRoutes.js';
+import perfilPropioRoutes from './src/routes/usuarioRoutes.js';
 import analisisRoutes from './src/routes/analisisRoutes.js';
 import carritoRoutes from './src/routes/carritoRoutes.js';
 
 const app = express();
 
 const corsOptions = {
-    origin: ['https://20241062-ui.github.io', 'http://localhost:3000'], 
+    origin: ['https://20241062-ui.github.io', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -51,7 +52,8 @@ app.use('/api/informacion', informacionRoutes);
 app.use('/api/clientes', clienteRoutes);
 app.use('/api/faq', faqRoutes);
 app.use('/api/contacto', contactoRoutes);
-app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/usuarios', perfilPropioRoutes);
+app.use('/api/admin/usuarios', adminGestionRoutes);
 app.use('/api/analisis', analisisRoutes);
 app.use('/api/carrito', carritoRoutes);
 
