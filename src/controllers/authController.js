@@ -28,7 +28,6 @@ export const login = async (req, res) => {
         }
 
         const hashAlmacenado = persona.vchpassword || persona.vchPassword;
-        
         if (!hashAlmacenado) {
             return res.status(500).json({ message: "Error en la estructura de seguridad de la cuenta." });
         }
@@ -55,11 +54,16 @@ export const login = async (req, res) => {
             });
         }
 
-        const idFinal = persona.id_usuario || persona.intid_Usuario || persona.intid_Cliente;
+        const idFinal = persona.id_usuario || persona.intid_Usuario || persona.intid_Cliente || persona.id;
         const nombreFinal = persona.vchnombre || persona.vchNombre;
         const rolFinal = persona.vchRol || 'Usuario';
 
-        console.log(`Login exitoso: ID ${idFinal}, Nombre ${nombreFinal}`);
+        if (!idFinal) {
+            console.error("Error: No se pudo determinar el ID del usuario.", persona);
+            return res.status(500).json({ message: "Error interno al procesar el identificador de usuario." });
+        }
+
+        console.log(`Login exitoso: ID ${idFinal}, Rol ${rolFinal}`);
 
         const token = jwt.sign(
             {
