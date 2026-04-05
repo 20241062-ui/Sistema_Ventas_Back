@@ -4,9 +4,17 @@ export const obtenerPerfil = async (req, res) => {
     try {
         const id = req.user.id;
         const usuario = await Usuario.obtenerPorId(id);
-        console.log("Buscando perfil para ID:", id);
-        if (!usuario) return res.status(404).json({ mensaje: "Usuario no encontrado" });
-        res.json(usuario);
+
+        if (!usuario) {
+            return res.status(404).json({ mensaje: "Usuario no encontrado" });
+        }
+
+        res.json({
+            vchNombre: usuario.vchnombre,
+            vchApellidoP: usuario.vchapellido,
+            vchApellidoM: "",
+            vchCorreo: usuario.vchcorreo
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -15,12 +23,11 @@ export const obtenerPerfil = async (req, res) => {
 export const actualizarPerfil = async (req, res) => {
     try {
         const id = req.user.id;
-        const { vchnombre, vchapellidoP, vchapellidoM, vchpassword } = req.body;
+        const { vchnombre, vchapellidoP, vchpassword } = req.body;
 
         await Usuario.actualizarPerfil(id, {
             nombre: vchnombre,
-            apellidoP: vchapellidoP,
-            apellidoM: vchapellidoM,
+            apellido: vchapellidoP,
             password: vchpassword || null
         });
 

@@ -12,6 +12,17 @@ const Usuario = {
         }
     },
 
+    obtenerPorId: async (id) => {
+        try {
+            const sql = "SELECT id_usuario, vchnombre, vchapellido, vchcorreo, vchRol FROM tblusuario WHERE id_usuario = ?";
+            const [rows] = await db.query(sql, [id]);
+            return rows[0];
+        } catch (error) {
+            console.error("Error en obtenerPorId:", error);
+            throw error;
+        }
+    },
+
     actualizarPerfil: async (id, datos) => {
         const { nombre, apellido, password } = datos;
         let sql, params;
