@@ -24,15 +24,15 @@ const Usuario = {
     },
 
     actualizarPerfil: async (id, datos) => {
-        const { nombre, apellido, password } = datos;
+        const { nombre, apellido, vchapellidoM, password } = datos;
         let sql, params;
 
         if (password) {
             sql = "UPDATE tblusuario SET vchnombre = ?, vchapellido = ?, vchapellidoM = ?, vchpassword = ? WHERE id_usuario = ?";
-            params = [nombre, apellido, password, id];
+            params = [nombre, apellido, vchapellidoM, password, id];
         } else {
             sql = "UPDATE tblusuario SET vchnombre = ?, vchapellido = ?,vchapellidoM = ?, WHERE id_usuario = ?";
-            params = [nombre, apellido, id];
+            params = [nombre, apellido, vchapellidoM, id];
         }
 
         try {
