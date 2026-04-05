@@ -4,7 +4,7 @@ import { verificarAdmin } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/perfil', verificarAdmin, obtenerPerfil);
-router.put('/perfil', verificarAdmin, actualizarPerfil);
+router.get('/perfil-admin', verificarAdmin, obtenerPerfil);
+router.put('/actualizar-admin', verificarAdmin, actualizarPerfil);
 
 export default router;
