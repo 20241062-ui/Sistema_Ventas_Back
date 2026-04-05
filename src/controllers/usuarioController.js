@@ -23,7 +23,7 @@ export const obtenerPerfil = async (req, res) => {
 export const actualizarPerfil = async (req, res) => {
     try {
         const id = req.user.id;
-        const { vchnombre, vchapellidoP,vchapellidoM, vchpassword } = req.body;
+        const { vchnombre, vchapellidoP, vchapellidoM, vchpassword } = req.body;
 
         await Usuario.actualizarPerfil(id, {
             nombre: vchnombre,
