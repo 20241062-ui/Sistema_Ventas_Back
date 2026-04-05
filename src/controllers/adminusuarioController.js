@@ -40,11 +40,3 @@ export const patchEstadoUsuario = async (req, res) => {
     }
 };
 
-export const deleteUsuario = async (req, res) => {
-    try {
-        await usuarioModel.eliminarPermanente(req.params.id);
-        res.json({ mensaje: "Usuario eliminado permanentemente" });
-    } catch (error) {
-        res.status(500).json({ error: "No se pudo eliminar el usuario. Verifique integridad de datos." });
-    }
-};

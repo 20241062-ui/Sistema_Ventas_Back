@@ -12,7 +12,7 @@ export const obtenerPerfil = async (req, res) => {
         res.json({
             vchNombre: usuario.vchnombre,
             vchApellidoP: usuario.vchapellido,
-            vchApellidoM: "",
+            vchApellidoM: usuario.vchApellidoM,
             vchCorreo: usuario.vchcorreo
         });
     } catch (error) {
@@ -23,11 +23,12 @@ export const obtenerPerfil = async (req, res) => {
 export const actualizarPerfil = async (req, res) => {
     try {
         const id = req.user.id;
-        const { vchnombre, vchapellidoP, vchpassword } = req.body;
+        const { vchnombre, vchapellidoP,vchapellidoM, vchpassword } = req.body;
 
         await Usuario.actualizarPerfil(id, {
             nombre: vchnombre,
             apellido: vchapellidoP,
+            apellidoM: vchapellidoM,
             password: vchpassword || null
         });
 
