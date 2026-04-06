@@ -29,6 +29,16 @@ export const upsertUsuario = async (req, res) => {
     }
 };
 
+export const deleteUsuario = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await usuarioModel.cambiarEstado(id, 0);
+        res.json({ mensaje: "Usuario dado de baja correctamente" });
+    } catch (error) {
+        res.status(500).json({ error: "Error al dar de baja: " + error.message });
+    }
+};
+
 export const patchEstadoUsuario = async (req, res) => {
     try {
         const { id } = req.params;
@@ -39,4 +49,3 @@ export const patchEstadoUsuario = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
