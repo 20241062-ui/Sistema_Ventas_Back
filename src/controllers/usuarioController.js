@@ -12,7 +12,7 @@ export const obtenerPerfil = async (req, res) => {
         res.json({
             vchNombre: usuario.vchnombre,
             vchApellidoP: usuario.vchapellido,
-            vchApellidoM: usuario.vchapellidoM,
+            vchapellidoM: usuario.vchapellidoM,
             vchCorreo: usuario.vchcorreo
         });
     } catch (error) {
