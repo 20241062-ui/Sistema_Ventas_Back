@@ -44,9 +44,19 @@ export const actualizarCategoria = async (req, res) => {
 export const eliminarCategoria = async (req, res) => {
     try {
         const { id } = req.params;
-        await Categoria.eliminarLogico(id);
-        res.json({ status: "success", mensaje: "Categoría dada de baja del sistema correctamente" });
+        await Categoria.cambiarEstado(id, 0);
+        res.json({ status: "success", mensaje: "Categoría dada de baja correctamente" });
     } catch (error) {
         res.status(500).json({ mensaje: "Error al dar de baja la categoría" });
+    }
+};
+
+export const reactivarCategoria = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Categoria.cambiarEstado(id, 1);
+        res.json({ status: "success", mensaje: "Categoría reactivada correctamente" });
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al reactivar la categoría" });
     }
 };

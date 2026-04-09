@@ -3,11 +3,11 @@ import db from '../config/BD.js';
 const Categoria = {
     obtenerTodas: async (busqueda = "") => {
         const sql = `
-            SELECT * FROM tblcategoria 
-            WHERE Estado = 1 
-            AND (intid_Categoria LIKE ? OR vchNombre LIKE ?)
-            ORDER BY intid_Categoria ASC`;
-        const params = [`%${busqueda}%`, `%${busqueda}%` ];
+        SELECT * FROM tblcategoria 
+        WHERE (intid_Categoria LIKE ? OR vchNombre LIKE ?)
+        ORDER BY intid_Categoria ASC`;
+
+        const params = [`%${busqueda}%`, `%${busqueda}%`];
         const [rows] = await db.query(sql, params);
         return rows;
     },
@@ -25,8 +25,8 @@ const Categoria = {
         return await db.query("UPDATE tblcategoria SET vchNombre = ? WHERE intid_Categoria = ?", [nombre, id]);
     },
 
-    eliminarLogico: async (id) => {
-        return await db.query("UPDATE tblcategoria SET Estado = 0 WHERE intid_Categoria = ?", [id]);
+    cambiarEstado: async (id, nuevoEstado) => {
+        return await db.query("UPDATE tblcategoria SET Estado = ? WHERE intid_Categoria = ?", [nuevoEstado, id]);
     }
 };
 

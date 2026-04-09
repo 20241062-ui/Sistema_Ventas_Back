@@ -4,8 +4,7 @@ const Marca = {
     obtenerTodas: async (busqueda = "") => {
         const sql = `
             SELECT * FROM tblmarcas 
-            WHERE Estado = 1 
-            AND (intid_Marca LIKE ? OR vchNombre LIKE ?)
+            WHERE (intid_Marca LIKE ? OR vchNombre LIKE ?)
             ORDER BY intid_Marca ASC`;
         const params = [`%${busqueda}%`, `%${busqueda}%` ];
         const [rows] = await db.query(sql, params);
