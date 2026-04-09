@@ -34,6 +34,6 @@ export const contactoModel = {
     },
 
     eliminar: async (id) => {
-        return await db.query("UPDATE FROM tblcontacto_info WHERE intid = ?", [id]);
+        return await db.query("DELETE FROM tblcontacto_info WHERE intid = ?", [id]);
     }
 };
