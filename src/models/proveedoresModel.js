@@ -7,7 +7,7 @@ export const proveedoresModel = {
         let params = [];
 
         if (busqueda) {
-            sql += ` AND (vchNombre LIKE ? OR vchRFC LIKE ? OR vchRazon_Social LIKE ?)`;
+            sql += ` WHERE (vchNombre LIKE ? OR vchRFC LIKE ? OR vchRazon_Social LIKE ?)`;
             params = [`%${busqueda}%`, `%${busqueda}%`, `%${busqueda}%`];
         }
 
@@ -38,7 +38,7 @@ export const proveedoresModel = {
         return await db.query(sql, [vchNombre, vchApellido_Paterno, vchApellido_Materno, vchColonia, intNo_ExteriorInterior, vchCodigo_Postal, vchCalle, vchTelefono, vchCorreo, vchRazon_Social, rfc]);
     },
 
-    eliminarLogico: async (rfc) => {
-        return await db.query("UPDATE tblproveedor SET intEstado = 0 WHERE vchRFC = ?", [rfc]);
+    cambiarEstado: async (rfc, nuevoEstado) => {
+        return await db.query("UPDATE tblproveedor SET intEstado = ? WHERE vchRFC = ?", [nuevoEstado, rfc]);
     }
 };

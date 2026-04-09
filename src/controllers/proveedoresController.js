@@ -39,8 +39,17 @@ export const guardarProveedor = async (req, res) => {
 
 export const eliminarProveedor = async (req, res) => {
     try {
-        await proveedoresModel.eliminarLogico(req.params.rfc);
-        res.json({ mensaje: "Proveedor dado de baja del sistema" });
+        await proveedoresModel.cambiarEstado(req.params.rfc, 0);
+        res.json({ mensaje: "Proveedor dado de baja" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const reactivarProveedor = async (req, res) => {
+    try {
+        await proveedoresModel.cambiarEstado(req.params.rfc, 1);
+        res.json({ mensaje: "Proveedor reactivado correctamente" });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
