@@ -1,7 +1,8 @@
 import express from 'express';
 import { 
     obtenerPoliticas, 
-    obtenerFAQ, 
+    obtenerFAQ,
+    obtenerSucursales, 
     obtenerContactoInfo, 
     enviarMensajeContacto,
     obtenerMarcas,
@@ -14,6 +15,7 @@ const router = express.Router();
 
 router.get('/politicas', obtenerPoliticas);
 router.get('/faq', obtenerFAQ);
+router.get('/sucursales', obtenerSucursales);
 router.get('/contacto-info', obtenerContactoInfo);
 router.post('/enviar-mensaje', enviarMensajeContacto);
 

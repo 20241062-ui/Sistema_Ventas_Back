@@ -18,6 +18,21 @@ export const obtenerFAQ = async (req, res) => {
     }
 };
 
+export const obtenerSucursales = async (req, res) => {
+    try {
+        const rows = await publicModel.getSucursales();
+        
+        const sucursales = rows.map(s => ({
+            ...s,
+            vchlink_mapa: s.vchlink_mapa.replace('/viewer?', '/embed?')
+        }));
+
+        res.json(sucursales);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener la ubicación de las sucursales.' });
+    }
+};
+
 export const obtenerContactoInfo = async (req, res) => {
     try {
         const rows = await publicModel.getContactoInfo();

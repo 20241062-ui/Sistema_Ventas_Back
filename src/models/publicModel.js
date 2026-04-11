@@ -13,6 +13,11 @@ const publicModel = {
         return rows;
     },
 
+    getSucursales: async () => {
+        const [rows] = await db.query('SELECT * FROM tblsucursales');
+        return rows;
+    },
+
     getContactoInfo: async () => {
         const [rows] = await db.query('SELECT vchcampo, vchvalor FROM tblcontacto_info');
         return rows;
@@ -31,6 +36,7 @@ const publicModel = {
         return rows;
     },
 
+    // Categorías (para selects)
     getCategorias: async () => {
         const [rows] = await db.query('SELECT intid_Categoria, vchNombre FROM tblcategoria ORDER BY vchNombre ASC');
         return rows;
