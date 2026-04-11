@@ -13,16 +13,6 @@ const publicModel = {
         return rows;
     },
 
-    getNosotros: async () => {
-        const [rows] = await db.query('SELECT vchseccion as titulo, vchcontenido as contenido FROM tblnosotros ORDER BY intid ASC');
-        return rows;
-    },
-
-    getSucursales: async () => {
-        const [rows] = await db.query('SELECT * FROM tblsucursales');
-        return rows;
-    },
-
     getContactoInfo: async () => {
         const [rows] = await db.query('SELECT vchcampo, vchvalor FROM tblcontacto_info');
         return rows;
