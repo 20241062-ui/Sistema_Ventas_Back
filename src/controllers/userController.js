@@ -1,43 +1,46 @@
-import db from '../config/BD.js';
+import { userModel } from '../models/userModel.js';
 import bcrypt from 'bcryptjs';
+
+export const obtenerDatosPerfil = async (req, res) => {
+    try {
+        const user = await userModel.obtenerPorId(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        const { vchpassword, ...datosPublicos } = user;
+        res.json(datosPublicos);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
 
 export const actualizarDatosPerfil = async (req, res) => {
     const { vchNombre, vchApellido_Paterno, vchApellido_Materno, vchTelefono, vchpassword } = req.body;
-    const userId = req.usuarioId;
+    const userId = req.user.id;
 
     try {
-        const [user] = await db.query('SELECT vchPassword FROM tblcliente WHERE id_usuario = ?', [userId]);
-        
-        let passwordFinal = user[0].vchPassword;
+        const userActual = await userModel.obtenerPorId(userId);
+        if (!userActual) return res.status(404).json({ message: "Usuario no encontrado" });
+
+        let passwordFinal = userActual.vchpassword;
+
         if (vchpassword && vchpassword.trim() !== "") {
-            passwordFinal = await bcrypt.hash(vchpassword, 10);
+            const salt = await bcrypt.genSalt(10);
+            passwordFinal = await bcrypt.hash(vchpassword, salt);
         }
 
-        await db.query(
-            `UPDATE tblcliente SET vchNombre = ?, vchApellido_Paterno = ?, vchApellido_Materno = ?, vchTelefono = ?, vchPassword = ? 
-            WHERE id_usuario = ?`,
-            [vchNombre, vchApellido_Paterno, vchApellido_Materno, vchTelefono || null, passwordFinal, userId]
-        );
+        await userModel.actualizar(userId, {
+            vchNombre,
+            vchApellido_Paterno,
+            vchApellido_Materno,
+            vchTelefono,
+            passwordHash: passwordFinal
+        });
 
         res.json({ success: true, message: 'Perfil actualizado correctamente.' });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
-    }
-};
-
-export const obtenerDatosPerfil = async (req, res) => {
-    try {
-        const [rows] = await db.query(
-            'SELECT vchNombre, vchApellido_Paterno, vchApellido_Materno, vchCorreo FROM tblcliente WHERE id_usuario = ?', 
-            [req.usuarioId]
-        );
-
-        if (rows.length === 0) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-
-        res.json(rows[0]);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
     }
 };

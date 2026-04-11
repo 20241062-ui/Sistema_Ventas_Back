@@ -1,5 +1,5 @@
 import express from 'express';
-import { obtenerDatosPerfil } from '../controllers/userController.js';
+import { obtenerDatosPerfil, actualizarDatosPerfil } from '../controllers/userController.js';
 import { verificarToken } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
