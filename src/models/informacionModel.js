@@ -25,11 +25,9 @@ export const informacionModel = {
         const { intid, vchtitulo, vchcontenido } = datos;
         
         if (intid) {
-            // UPDATE
             const sql = "UPDATE tblinformacion SET vchtitulo = ?, vchcontenido = ? WHERE intid = ?";
             return await db.query(sql, [vchtitulo, vchcontenido, intid]);
         } else {
-            // INSERT (Estado por defecto 1)
             const sql = "INSERT INTO tblinformacion (vchtitulo, vchcontenido, Estado) VALUES (?, ?, 1)";
             return await db.query(sql, [vchtitulo, vchcontenido]);
         }
