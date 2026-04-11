@@ -123,6 +123,6 @@ export const registrar = async (req, res) => {
 
     } catch (error) {
         console.error("Error en registro:", error);
-        res.status(500).json({ message: "Error al registrar", error: error.message });
+        res.status(500).json({ message: "Error interno al registrar", error: error.message });
     }
 };

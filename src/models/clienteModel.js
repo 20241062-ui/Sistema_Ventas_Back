@@ -35,16 +35,16 @@ export const clienteModel = {
 
     buscarPorCorreo: async (correo) => {
         const [rows] = await db.query(
-            'SELECT intid_Cliente, vchNombre, vchpassword, Estado FROM tblcliente WHERE vchCorreo = ?', 
+            'SELECT intid_Cliente, vchNombre, vchpassword, Estado FROM tblcliente WHERE vchCorreo = ?',
             [correo]
         );
-        return rows[0]; 
+        return rows[0];
     },
     crear: async (datos) => {
         const { vchNombre, vchApellido_Paterno, vchApellido_Materno, vchCorreo, vchpassword } = datos;
         const sql = `INSERT INTO tblcliente 
-            (vchNombre, vchApellido_Paterno, vchApellido_Materno, vchCorreo, vchpassword, Estado) 
-            VALUES (?, ?, ?, ?, ?, 1)`;
+        (vchNombre, vchApellido_Paterno, vchApellido_Materno, vchCorreo, vchpassword, Estado) 
+        VALUES (?, ?, ?, ?, ?, 1)`;
         const [result] = await db.query(sql, [vchNombre, vchApellido_Paterno, vchApellido_Materno, vchCorreo, vchpassword]);
         return result;
     }
