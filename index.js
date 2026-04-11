@@ -20,7 +20,6 @@ import contactoRoutes from './src/routes/contactoRoutes.js';
 import adminGestionRoutes from './src/routes/adminusuarioRoutes.js';
 import perfilPropioRoutes from './src/routes/usuarioRoutes.js';
 import analisisRoutes from './src/routes/analisisRoutes.js';
-import carritoRoutes from './src/routes/carritoRoutes.js';
 
 const app = express();
 
@@ -55,6 +54,5 @@ app.use('/api/contacto', contactoRoutes);
 app.use('/api/usuarios', perfilPropioRoutes);
 app.use('/api/admin/usuarios', adminGestionRoutes);
 app.use('/api/analisis', analisisRoutes);
-app.use('/api/carrito', carritoRoutes);
 
 export default app;
