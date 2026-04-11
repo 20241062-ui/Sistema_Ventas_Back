@@ -3,13 +3,14 @@ import bcrypt from 'bcryptjs';
 
 export const obtenerDatosPerfil = async (req, res) => {
     try {
-        const user = await userModel.obtenerPorId(req.user.id);
+        const userId = req.user.id;
+        const user = await userModel.obtenerPorId(userId);
 
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
-        const { vchpassword, ...datosPublicos } = user;
+        const { vchPassword, ...datosPublicos } = user;
         res.json(datosPublicos);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -24,7 +25,7 @@ export const actualizarDatosPerfil = async (req, res) => {
         const userActual = await userModel.obtenerPorId(userId);
         if (!userActual) return res.status(404).json({ message: "Usuario no encontrado" });
 
-        let passwordFinal = userActual.vchpassword;
+        let passwordFinal = userActual.vchPassword;
 
         if (vchpassword && vchpassword.trim() !== "") {
             const salt = await bcrypt.genSalt(10);

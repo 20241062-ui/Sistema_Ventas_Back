@@ -3,7 +3,7 @@ import db from '../config/BD.js';
 export const userModel = {
     obtenerPorId: async (id) => {
         const [rows] = await db.query(
-            'SELECT vchNombre, vchApellido_Paterno, vchApellido_Materno, vchCorreo, vchpassword FROM tblcliente WHERE intid_Cliente = ?', 
+            'SELECT vchNombre, vchApellido_Paterno, vchApellido_Materno, vchCorreo, vchPassword FROM tblcliente WHERE intid_Cliente = ?', 
             [id]
         );
         return rows[0];
@@ -16,7 +16,7 @@ export const userModel = {
             vchApellido_Paterno = ?, 
             vchApellido_Materno = ?, 
             vchTelefono = ?, 
-            vchpassword = ? 
+            vchPassword = ? 
             WHERE intid_Cliente = ?`;
         
         return await db.query(sql, [
