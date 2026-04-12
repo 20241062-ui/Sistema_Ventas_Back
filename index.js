@@ -21,6 +21,7 @@ import adminGestionRoutes from './src/routes/adminusuarioRoutes.js';
 import perfilPropioRoutes from './src/routes/usuarioRoutes.js';
 import perfilRoutes from './src/routes/userRoutes.js';
 import analisisRoutes from './src/routes/analisisRoutes.js';
+import pedidoRoutes from './src/routes/pedidoRoutes.js';
 
 const app = express();
 
@@ -56,5 +57,6 @@ app.use('/api/usuarios', perfilPropioRoutes);
 app.use('/api/admin/usuarios', adminGestionRoutes);
 app.use('/api/usuarios', perfilRoutes);
 app.use('/api/analisis', analisisRoutes);
+app.use('/api/pedidos', pedidoRoutes);
 
 export default app;
