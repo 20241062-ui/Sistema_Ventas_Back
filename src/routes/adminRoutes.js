@@ -28,5 +28,6 @@ router.post('/categorias', verificarAdmin, categoriaCtrl.guardarCategoria);
 router.put('/categorias/:id', verificarAdmin, categoriaCtrl.actualizarCategoria);
 router.delete('/categorias/:id', verificarAdmin, categoriaCtrl.eliminarCategoria);
 router.patch('/categorias/:id/activar', verificarAdmin, categoriaCtrl.reactivarCategoria);
+router.patch('/marcas/estado/:id', verificarAdmin, marcaCtrl.cambiarEstadoMarca);
 
 export default router;

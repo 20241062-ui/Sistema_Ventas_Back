@@ -50,3 +50,19 @@ export const eliminarMarca = async (req, res) => {
         res.status(500).json({ mensaje: "Error al dar de baja la marca" });
     }
 };
+export const cambiarEstadoMarca = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { estadoActual } = req.body;
+        
+        if (estadoActual === 1) {
+            await Marca.eliminarLogico(id);
+        } else {
+            await Marca.activarLogico(id);
+        }
+        
+        res.json({ status: "success", mensaje: "Estado de marca actualizado" });
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al cambiar estado" });
+    }
+};

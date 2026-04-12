@@ -26,7 +26,10 @@ const Marca = {
 
     eliminarLogico: async (id) => {
         return await db.query("UPDATE tblmarcas SET Estado = 0 WHERE intid_Marca = ?", [id]);
-    }
+    },
+    activarLogico: async (id) => {
+    return await db.query("UPDATE tblmarcas SET Estado = 1 WHERE intid_Marca = ?", [id]);
+}
 };
 
 export default Marca;
