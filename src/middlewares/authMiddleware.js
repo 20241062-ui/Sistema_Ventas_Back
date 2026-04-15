@@ -9,7 +9,7 @@ export const verificarToken = (req, res, next) => {
     const token = authHeader.split(' ')[1];
     try {
         const decoded = jwt.verify(token, SECRET_KEY);
-        req.user = decoded;
+        req.user = decoded; 
         next();
     } catch (error) {
         return res.status(401).json({ message: 'Sesión inválida o expirada.' });
@@ -18,9 +18,16 @@ export const verificarToken = (req, res, next) => {
 
 export const verificarAdmin = (req, res, next) => {
     verificarToken(req, res, () => {
-        if (req.user.rol !== 'Administrador') {
-            return res.status(403).json({ message: 'Requiere permisos de administrador.' });
+        const rolesPermitidos = [
+            'Administrador', 'Vendedor', 'Encargado', 
+            'Auxiliar', 'DBA', 'Programador', 
+            'Auditor', 'Soporte Técnico'
+        ];
+
+        if (!rolesPermitidos.includes(req.user.rol)) {
+            return res.status(403).json({ message: 'Acceso denegado: Requiere permisos de personal autorizado.' });
         }
-        next();
+        
+        next(); 
     });
 };
