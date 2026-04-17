@@ -20,6 +20,7 @@ export const getSimulacionDinamica = async (req, res) => {
             stockActual: S_actual,
             stockInicial: S_inicial,
             k: K.toFixed(6),
+            tiempo: t,
             resultados: {
                 semanasPedido: (Math.log(10 / S_inicial) / K).toFixed(2),
                 semanasAgotamiento: (Math.log(1 / S_inicial) / K).toFixed(2)
